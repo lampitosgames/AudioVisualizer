@@ -46,14 +46,24 @@ app.main = (function() {
         a.ctx.fillRect(0, 0, a.viewport.width, a.viewport.height);
 
         //Visualizer
-        let barWidth = (Math.floor(a.viewport.width) - 512) / 128;
-        let barSpacing = 4;
+        let barWidth = (Math.floor(a.viewport.width)) / 512;
+        let barSpacing = 0;
 
         let aData = a.audio.data();
-        for (var i=0; i<aData.length; i++) {
+        let multiplier = (1.001/(aData.length/2));
+
+        let dData = new Array(aData.length);
+
+        for (var i=0; i<aData.length/2; i++) {
+            dData[i] = Math.min(270, aData[i] * (1 + multiplier*i));
+
             a.ctx.fillStyle = "red";
 
-            a.ctx.fillRect(i*(barWidth + barSpacing), 0, barWidth, Math.max(Math.pow(aData[128-i]/20.0, 2.5), barWidth));
+            a.ctx.fillRect(i*(barWidth + barSpacing),
+                           0,
+                           barWidth,
+                        //    a.utils.map(Math.pow(aData[i], 2), 0, 65025, barWidth, a.viewport.height/2));
+                           a.utils.map(Math.pow(dData[i], 6), 0, Math.pow(270, 6), barWidth, a.viewport.height/2));
         }
 
         drawScrubber();
@@ -66,7 +76,7 @@ app.main = (function() {
         }
 
 
-        let currentTime = a.audio.nodes.sourceNode.context.currentTime;
+        let currentTime = a.audio.getAudioTimestamp();
         let songLength = a.audio.getAudioLength();
         let circlePos = a.utils.map(currentTime, 0.0, songLength, 0, a.viewport.width);
         a.ctx.strokeStyle = "red";

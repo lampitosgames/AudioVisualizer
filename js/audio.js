@@ -34,10 +34,12 @@ app.audio = (function(){
     //Audio constants
     const DEFAULT_VOLUME = 1.0;
     const DEFAULT_SONG = 0;
-    const NUM_SAMPLES = 512;
+    const NUM_SAMPLES = 2048;
 
     //Visualizer data
     let data = [];
+    let audioTimestamp = 0.0;
+    let audioTimestampMultiplier = 1.0;
 
     /**
      * Initialize the audio module
@@ -50,13 +52,17 @@ app.audio = (function(){
         nodes.gainNode.gain.value = DEFAULT_VOLUME;
         //Play the first song
         playNewAudio(DEFAULT_SONG);
+        setTimeout(function() {console.log(data)}, 6000);
     }
 
     function update() {
+        //Update the song time
+        audioTimestamp += app.time.dt() * audioTimestampMultiplier;
+
         //Initialize data array
-        data = new Uint8Array(nodes.analyserNode.frequencyBinCount);
+        data = new Float32Array(nodes.analyserNode.frequencyBinCount);
         //Populate the array with frequency data
-        nodes.analyserNode.getByteFrequencyData(data);
+        nodes.analyserNode.getFloatFrequencyData(data);
         //Populate the array with waveform data
         //nodes.analyserNode.getByteTimeDomainData(data);
 
@@ -115,6 +121,8 @@ app.audio = (function(){
         //Add the new source and start it at the inputted timestamp
         nodes.sourceNode = newSource;
         nodes.sourceNode.start(0, time);
+        audioTimestamp = time;
+        audioTimestampMultiplier = 1.0;
     }
 
     /**
@@ -132,7 +140,7 @@ app.audio = (function(){
      */
     function playAudio() {
         audioCtx.resume().then(function() {
-            //Reserved for callbacks
+            audioTimestampMultiplier = 1.0;
             return;
         });
     }
@@ -142,7 +150,7 @@ app.audio = (function(){
      */
     function pauseAudio() {
         audioCtx.suspend().then(function() {
-            //Reserved for callbacks
+            audioTimestampMultiplier = 0.0;
             return;
         });
     }
@@ -151,7 +159,7 @@ app.audio = (function(){
     /**
      * Update the member variables of the audio analyser to change the bounds of its output
      */
-    function updateAudioAnalyser(fftSize = NUM_SAMPLES, smoothingTimeConstant = 0.8, minDecibels = 30, maxDecibels = 200) {
+    function updateAudioAnalyser(fftSize = NUM_SAMPLES, smoothingTimeConstant = 0.99, minDecibels = 100, maxDecibels = 200) {
         nodes.analyserNode.fftSize = fftSize;
         nodes.analyserNode.smoothingTimeConstant = smoothingTimeConstant;
         nodes.analyserNode.minDecibels = minDecibels;
@@ -165,6 +173,8 @@ app.audio = (function(){
     function startAudio() {
         if (nodes.sourceNode.buffer) {
             nodes.sourceNode.start();
+            audioTimestamp = 0.0;
+            audioTimestampMultiplier = 1.0;
         }
     }
 
@@ -175,6 +185,7 @@ app.audio = (function(){
     function stopAudio() {
         if (nodes.sourceNode.buffer) {
             nodes.sourceNode.stop();
+            audioTimestampMultiplier = 0.0;
         }
     }
 
@@ -275,6 +286,7 @@ app.audio = (function(){
         seekToTime: seekToTime,
         seekToPercent: seekToPercent,
         getAudioLength: getAudioLength,
+        getAudioTimestamp: function() { return audioTimestamp; },
         playNewAudio: playNewAudio,
         updateAudioAnalyser: updateAudioAnalyser
     }
