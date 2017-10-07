@@ -159,7 +159,7 @@ app.audio = (function(){
     /**
      * Update the member variables of the audio analyser to change the bounds of its output
      */
-    function updateAudioAnalyser(fftSize = NUM_SAMPLES, smoothingTimeConstant = 0.99, minDecibels = 100, maxDecibels = 200) {
+    function updateAudioAnalyser(fftSize = NUM_SAMPLES, smoothingTimeConstant = 0.99, minDecibels = -90, maxDecibels = 200) {
         nodes.analyserNode.fftSize = fftSize;
         nodes.analyserNode.smoothingTimeConstant = smoothingTimeConstant;
         nodes.analyserNode.minDecibels = minDecibels;

@@ -50,20 +50,16 @@ app.main = (function() {
         let barSpacing = 0;
 
         let aData = a.audio.data();
-        let multiplier = (1.001/(aData.length/2));
-
-        let dData = new Array(aData.length);
 
         for (var i=0; i<aData.length/2; i++) {
-            dData[i] = Math.min(270, aData[i] * (1 + multiplier*i));
+            aData[i] = (aData[i]+145)*2;
 
             a.ctx.fillStyle = "red";
 
             a.ctx.fillRect(i*(barWidth + barSpacing),
                            0,
                            barWidth,
-                        //    a.utils.map(Math.pow(aData[i], 2), 0, 65025, barWidth, a.viewport.height/2));
-                           a.utils.map(Math.pow(dData[i], 6), 0, Math.pow(270, 6), barWidth, a.viewport.height/2));
+                           a.utils.map(Math.pow(aData[i], 8), 0, Math.pow(255, 8), barWidth, a.viewport.height/2));
         }
 
         drawScrubber();
