@@ -11,6 +11,7 @@ window.onload = function() {
     app.audio.init();
     app.keys.init();
     app.time.init();
+    app.file.init();
 
     //Initialize main
     app.main.init();

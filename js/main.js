@@ -22,7 +22,9 @@ app.main = (function() {
         window.addEventListener('resize', resize);
         resize();
 
-        window.addEventListener('mousedown', function() {mouseDown = true;});
+        window.addEventListener('mousedown', function() {
+            mouseDown = true;
+        });
         window.addEventListener('mouseup', function() {
             mouseDown = false;
             a.audio.seekToPercent(scrubPercent);
@@ -46,20 +48,13 @@ app.main = (function() {
         a.ctx.fillRect(0, 0, a.viewport.width, a.viewport.height);
 
         //Visualizer
-        let barWidth = (Math.floor(a.viewport.width)) / 512;
-        let barSpacing = 0;
-
+        a.ctx.fillStyle = "red";
         let aData = a.audio.data();
+        let barSpacing = 2;
+        let barWidth = (Math.floor(a.viewport.width) - aData.length * barSpacing) / aData.length;
 
-        for (var i=0; i<aData.length/2; i++) {
-            aData[i] = (aData[i]+145)*2;
-
-            a.ctx.fillStyle = "red";
-
-            a.ctx.fillRect(i*(barWidth + barSpacing),
-                           0,
-                           barWidth,
-                           a.utils.map(Math.pow(aData[i], 8), 0, Math.pow(255, 8), barWidth, a.viewport.height/2));
+        for (var i = 0; i < aData.length; i++) {
+            a.ctx.fillRect(i * (barWidth + barSpacing), 0, barWidth, a.utils.map(aData[i], 0, a.audio.getFloatDataMax(), barWidth, a.viewport.height / 2));
         }
 
         drawScrubber();
@@ -71,14 +66,13 @@ app.main = (function() {
             scrubPercent = a.utils.norm(a.mouse[0], 0, a.viewport.width) * 100;
         }
 
-
         let currentTime = a.audio.getAudioTimestamp();
         let songLength = a.audio.getAudioLength();
         let circlePos = a.utils.map(currentTime, 0.0, songLength, 0, a.viewport.width);
         a.ctx.strokeStyle = "red";
         a.ctx.lineWidth = 5;
         a.ctx.beginPath();
-        a.ctx.arc(circlePos, a.viewport.height - 100, 15, 0, Math.PI*2);
+        a.ctx.arc(circlePos, a.viewport.height - 100, 15, 0, Math.PI * 2);
         a.ctx.stroke();
         a.ctx.closePath();
         a.ctx.beginPath();

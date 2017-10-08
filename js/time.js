@@ -17,15 +17,15 @@ app.time = (function() {
      * Calculates the time between frames
      */
     function calculateDeltaTime() {
-    	let now;
+        let now;
         //Get time in ms
         now = performance.now();
         //Get capped instant FPS (from last frame to this frame)
-    	fps = a.utils.clamp(1000 / (now - lastTime), 5, 60);
+        fps = a.utils.clamp(1000 / (now - lastTime), 5, 60);
         //Store this frame time
         lastTime = now;
         //Return the last frame's time (delta time) in seconds
-    	return 1/fps;
+        return 1 / fps;
     }
 
     /**
@@ -43,8 +43,14 @@ app.time = (function() {
         calculateDeltaTime: calculateDeltaTime,
         update: update,
         init: init,
-        dt: function() { return dt; },
-        runTime: function() { return runTime; },
-        fps: function() { return fps; }
+        dt: function() {
+            return dt;
+        },
+        runTime: function() {
+            return runTime;
+        },
+        fps: function() {
+            return fps;
+        }
     }
 }());

@@ -5,3 +5,12 @@
     width: 100vw;
     height: 100vh;
 }
+
+#uploader {
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    padding: 10px;
+    background-color: white;
+    position: absolute;
+}
