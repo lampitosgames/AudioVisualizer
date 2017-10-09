@@ -22,18 +22,18 @@ app.main = (function() {
         window.addEventListener('resize', resize);
         resize();
 
-        window.addEventListener('mousedown', function() {
+        a.canvas.addEventListener('mousedown', function() {
             mouseDown = true;
         });
-        window.addEventListener('mouseup', function() {
+        a.canvas.addEventListener('mouseup', function() {
             mouseDown = false;
             a.audio.seekToPercent(scrubPercent);
-            console.log(a);
         });
+
+        a.bezier.setAnchorPoints([[100, 0], [1280, 500], [900, 600], [400, 400], [800, 90]]);
 
         //Start the update loop.
         update();
-        console.log(app);
     }
 
     function update() {
@@ -58,6 +58,7 @@ app.main = (function() {
         }
 
         drawScrubber();
+        a.bezier.updateAnchorPoint(4, a.mouse);
     }
 
     function drawScrubber() {

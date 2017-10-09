@@ -1,1 +1,0 @@
-- Instead of displaying frequency data, display the delta

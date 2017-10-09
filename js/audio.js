@@ -9,18 +9,24 @@ app.audio = (function() {
     let songs = [
         {
             id: 0,
+            hasBuffer: false,
+            buffer: undefined,
             name: "Firewall",
             artist: "Les Friction",
             album: "Dark Matter",
             filepath: "./media/firewall.mp3"
         }, {
             id: 1,
+            hasBuffer: false,
+            buffer: undefined,
             name: "Dark Matter",
             artist: "Les Friction",
             album: "Dark Matter",
             filepath: "./media/darkMatter.mp3"
         }, {
             id: 2,
+            hasBuffer: false,
+            buffer: undefined,
             name: "No Vacancy",
             artist: "OneRepublic",
             album: "No Vacancy",
@@ -74,13 +80,9 @@ app.audio = (function() {
      */
     function update() {
         //If a promise is waiting to be resolved (new song loading), pause
-        if (newAudioPromise != undefined)
-            return;
-
+        if (newAudioPromise != undefined) return;
         //If the audio is paused, return
-        if (paused)
-            return;
-
+        if (paused) return;
         //Check if the current song is done playing.  If it is, go to the next one.
         if (getAudioLength() != -1 && audioTimestamp > getAudioLength()) {
             newAudioPromise = playNewAudio((currentSong + 1) % songs.length);
@@ -95,10 +97,12 @@ app.audio = (function() {
 
         //Initialize data array
         let floatRawData = new Float32Array(nodes.analyserNode.frequencyBinCount);
-        let waveRawData = new Uint8Array(nodes.analyserNode.frequencyBinCount);
         //Populate the array with frequency data
         nodes.analyserNode.getFloatFrequencyData(floatRawData);
-        //Populate the array with waveform data
+
+        // //Initialize the waveform array
+        // let waveRawData = new Uint8Array(nodes.analyserNode.frequencyBinCount);
+        // //Populate the array with waveform data
         // nodes.analyserNode.getByteTimeDomainData(waveRawData);
 
         //Scale float data logrithmically and cut off the latter half.  This is so displaying is easier
@@ -125,15 +129,63 @@ app.audio = (function() {
         //Stop the previous song
         stopAudio();
 
+        //If there is already a buffer loaded for this song, don't load another
+        if (songs[id].hasBuffer) {
+            //Play from the already-loaded buffer, returning a promise
+            return playFromBuffer(id);
+        }
+
         //Asyncronously load a new song into the audio context
         //Return a promise that resolves when the audio loads successfully
         return new Promise(function(resolve, reject) {
-            loadAudio(songs[id].filepath, function() {
+            loadAudio(id, function() {
                 //Play the song
                 startAudio();
                 currentSong = id;
                 resolve();
             }, reject);
+        });
+    }
+
+    /**
+     * Play a song from a pre-existing buffer instead of from the server.
+     * This prevents the server form having to re-fetch already loaded audio
+     * This function assumes that songs[id].buffer is defined as an ArrayBuffer or an AudioBuffer
+     */
+    function playFromBuffer(id) {
+        //Stop the currently playing audio
+        stopAudio();
+        //If the sourceNode already has a defined buffer, re-create it
+        if (nodes.sourceNode.buffer) {
+            nodes.sourceNode = audioCtx.createBufferSource();
+            nodes.sourceNode.connect(nodes.sourceNodeOutput);
+        }
+
+        //Return a promise that resolves when the audio has loaded
+        return new Promise(function(resolve, reject) {
+            //Local function that sets the current song, starts the buffer, and resolves the promise
+            let startTheBuffer = function() {
+                //Set the current song
+                currentSong = id;
+                //Point the sourceNode to the audio buffer
+                nodes.sourceNode.buffer = songs[id].buffer;
+                //Start the audio
+                startAudio();
+                resolve();
+            }
+            //If the buffer is an ArrayBuffer, decode it into an AudioBuffer
+            if (songs[id].buffer instanceof ArrayBuffer) {
+                audioCtx.decodeAudioData(songs[id].buffer, function(decodedBuffer) {
+                    //Set the song buffer
+                    songs[id].buffer = decodedBuffer;
+                    //Start the buffer
+                    startTheBuffer();
+                }, reject);
+            //Prevent this code from running if the buffer needs to be converted to prevent errors
+            } else {
+                //Start the buffer
+                startTheBuffer();
+            }
         });
     }
 
@@ -308,27 +360,15 @@ app.audio = (function() {
         nodes.analyserNode.connect(audioCtx.destination);
     }
 
-    function playFromBuffer(buffer) {
-        stopAudio();
-        if (nodes.sourceNode.buffer) {
-            nodes.sourceNode = audioCtx.createBufferSource();
-            nodes.sourceNode.connect(nodes.sourceNodeOutput);
-        }
-        audioCtx.decodeAudioData(buffer, function(audioBuffer) {
-            nodes.sourceNode.buffer = audioBuffer;
-            startAudio();
-        });
-    }
-
     /**
      * Loads a song into the audio source buffer.
      * Must call createAudioContext before this function.
      * This function is private
      */
-    function loadAudio(url, successCallback, failureCallback) {
+    function loadAudio(id, successCallback, failureCallback) {
         //Create a GET request for the audio buffer
         var request = new XMLHttpRequest();
-        request.open('GET', url, true);
+        request.open('GET', songs[id].filepath, true);
         request.responseType = 'arraybuffer';
         //When it loads, call an anonymous function
         request.onload = function() {
@@ -341,6 +381,9 @@ app.audio = (function() {
                 }
                 //Pass this buffer data into the audio source node
                 nodes.sourceNode.buffer = buffer;
+                //Set the song buffer so we don't have to re-load it from the server
+                songs[id].hasBuffer = true;
+                songs[id].buffer = buffer;
                 //Call the callback that was passed into the loadAudio function
                 successCallback();
                 //Call the failure callback
