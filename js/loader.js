@@ -12,6 +12,7 @@ window.onload = function() {
     app.keys.init();
     app.time.init();
     app.file.init();
+    // app.drawing.init();
 
     //Initialize main
     app.main.init();

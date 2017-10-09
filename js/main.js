@@ -16,21 +16,18 @@ app.main = (function() {
     let scrubPercent = 0;
 
     function init() {
-        //Store the canvas element
-        a.canvas = document.getElementById("canvas");
+        //Init canvas
+        app.canvas = document.getElementById("canvas");
         //Bind resize, then call it as part of initialization
         window.addEventListener('resize', resize);
         resize();
 
-        a.canvas.addEventListener('mousedown', function() {
+        app.canvas.addEventListener('mousedown', function() {
             mouseDown = true;
         });
-        a.canvas.addEventListener('mouseup', function() {
+        app.canvas.addEventListener('mouseup', function() {
             mouseDown = false;
-            a.audio.seekToPercent(scrubPercent);
         });
-
-        a.bezier.setAnchorPoints([[100, 0], [1280, 500], [900, 600], [400, 400], [800, 90]]);
 
         //Start the update loop.
         update();
@@ -44,7 +41,7 @@ app.main = (function() {
         a.audio.update();
 
         //Override everything with a full-size background
-        a.ctx.fillStyle = "#171717";
+        a.ctx.fillStyle = "#f7f7f7";
         a.ctx.fillRect(0, 0, a.viewport.width, a.viewport.height);
 
         //Visualizer
@@ -54,36 +51,18 @@ app.main = (function() {
         let barWidth = (Math.floor(a.viewport.width) - aData.length * barSpacing) / aData.length;
 
         for (var i = 0; i < aData.length; i++) {
-            a.ctx.fillRect(i * (barWidth + barSpacing), 0, barWidth, a.utils.map(aData[i], 0, a.audio.getFloatDataMax(), barWidth, a.viewport.height / 2));
+            a.drawing.drawAudioBar(i*(barWidth+barSpacing), a.viewport.height/2.5, barWidth, aData[i], a.viewport.height/4, [255, 0, 0]);
         }
 
-        drawScrubber();
-        a.bezier.updateAnchorPoint(4, a.mouse);
-    }
+        // for (let i = 150; i > 0; i -= 3) {
+        //     a.drawing.drawCircle(a.viewport.width/2 - i, a.viewport.height/2 + i, 300, "rgba(0, 0, 0, 0.01)");
+        // }
+        // let grad = a.ctx.createLinearGradient(a.viewport.width/2 + 300, a.viewport.height/2 - 300, a.viewport.width/2 - 300, a.viewport.height/2 + 300);
+        // grad.addColorStop(0, "rgba(235, 235, 235, 1.0)");
+        // grad.addColorStop(1, "rgba(255, 255, 255, 1.0)");
+        // a.drawing.drawCircle(a.viewport.width/2, a.viewport.height/2, 300, grad);
 
-    function drawScrubber() {
-        //First off, check for mouse down
-        if (mouseDown) {
-            scrubPercent = a.utils.norm(a.mouse[0], 0, a.viewport.width) * 100;
-        }
-
-        let currentTime = a.audio.getAudioTimestamp();
-        let songLength = a.audio.getAudioLength();
-        let circlePos = a.utils.map(currentTime, 0.0, songLength, 0, a.viewport.width);
-        a.ctx.strokeStyle = "red";
-        a.ctx.lineWidth = 5;
-        a.ctx.beginPath();
-        a.ctx.arc(circlePos, a.viewport.height - 100, 15, 0, Math.PI * 2);
-        a.ctx.stroke();
-        a.ctx.closePath();
-        a.ctx.beginPath();
-        a.ctx.moveTo(0, a.viewport.height - 100);
-        a.ctx.lineTo(circlePos - 15, a.viewport.height - 100);
-        a.ctx.moveTo(circlePos + 15, a.viewport.height - 100);
-        a.ctx.lineTo(a.viewport.width, a.viewport.height - 100);
-        a.ctx.stroke();
-        a.ctx.font = "14pt Courier";
-        a.ctx.fillText(String(Math.floor(currentTime)), circlePos - 15, a.viewport.height - 130);
+        // a.drawing.drawScrubber();
     }
 
     function resize() {

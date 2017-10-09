@@ -13,6 +13,7 @@ app.keys = (function() {
         "KEY_SPACE": 32,
         "KEY_SHIFT": 16
     });
+    let mouseDown = false;
 
     function init() { // event listeners
         window.addEventListener("keydown", function(e) {
@@ -24,5 +25,5 @@ app.keys = (function() {
         });
     }
 
-    return {keydown: keydown, KEYBOARD: KEYBOARD, init: init}
+    return {keydown: keydown, KEYBOARD: KEYBOARD, init: init, mouseDown: mouseDown}
 }());
