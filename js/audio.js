@@ -51,7 +51,7 @@ app.audio = (function() {
     const DEFAULT_SONG = 0;
     const NUM_SAMPLES = 1024;
 
-    //Visualizer data
+    //Visualiser data
     let data = [];
     //Maximum value of any single item in the data array.  By default, the data array is floats
     let floatDataMaxValue = Math.pow(255, 8);
@@ -76,7 +76,7 @@ app.audio = (function() {
 
     /**
      * Update the audio module.
-     * Play new songs, update visualizer data, apply audio effects
+     * Play new songs, update Visualiser data, apply audio effects
      */
     function update() {
         //If a promise is waiting to be resolved (new song loading), pause

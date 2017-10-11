@@ -76,7 +76,7 @@ app.drawing = (function() {
         let theta = -Math.PI / 2 + increment;
         //Loop through all the data and draw it
         for (let i = 1; i < mappedData.length; i++) {
-            //Get three visualizer data values
+            //Get three Visualiser data values
             let d0 = mappedData[i - 1];
             let d1 = mappedData[i];
             let d2 = mappedData[(i + 1) % mappedData.length];

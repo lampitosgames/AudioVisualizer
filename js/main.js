@@ -47,7 +47,7 @@ app.main = (function() {
         a.ctx.fillStyle = "#f7f7f7";
         a.ctx.fillRect(0, 0, a.viewport.width, a.viewport.height);
 
-        //Visualizer
+        //Visualiser
         a.ctx.fillStyle = "red";
         let aData = a.audio.data();
         let barSpacing = 2;
