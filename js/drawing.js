@@ -2,6 +2,7 @@
 
 app.drawing = (function() {
     let a = app;
+    let scrubAngle;
 
     function drawCircle(x, y, rad, color) {
         let c = app.ctx;
@@ -22,12 +23,16 @@ app.drawing = (function() {
         let circleY = a.viewport.height/2;
         let radius = 300;
 
-        // if (a.keys.mouseDown) {
-        //     let m = a.mouse;
-        //     scrubAngle = Math.atan((mouse[0] - circleX)/(mouse[1] - circleY));
-        // } else {
-        let scrubAngle = a.utils.map(currentTime, 0.0, songLength, 0, Math.PI*2) - Math.PI/2;
-        // }
+        if (a.main.mouseDown()) {
+            let m = a.keys.mouse();
+            let vector = [(m[0] - circleX), (m[1] - circleY)];
+            scrubAngle = Math.atan(vector[1]/vector[0]);
+            if (vector[0] < 0) {
+                scrubAngle += Math.PI;
+            }
+        } else {
+            scrubAngle = a.utils.map(currentTime, 0.0, songLength, 0, Math.PI*2) - Math.PI/2;
+        }
 
         scrubAngle = songLength == -1 ? -Math.PI/2 : scrubAngle;
         let scrubX = circleX + Math.cos(scrubAngle) * radius;
@@ -74,6 +79,9 @@ app.drawing = (function() {
     return {
         drawAudioBar: drawAudioBar,
         drawCircle: drawCircle,
-        drawScrubber: drawScrubber
+        drawScrubber: drawScrubber,
+        scrubAngle: function() {
+            return scrubAngle;
+        }
     };
 }());

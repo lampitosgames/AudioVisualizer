@@ -151,7 +151,6 @@ app.utils = {
                     //Push new lerped point to the newArray
                     newArray.push(threePointLerp(t, currentPoints[i], currentPoints[i+1], currentPoints[i+2]));
                 }
-                console.log(newArray.length);
                 //Replace current points with newly lerped points
                 currentPoints = newArray;
             }

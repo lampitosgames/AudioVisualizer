@@ -27,6 +27,9 @@ app.main = (function() {
         });
         app.canvas.addEventListener('mouseup', function() {
             mouseDown = false;
+            let toPercent = a.utils.map(a.drawing.scrubAngle(), -Math.PI*0.5, Math.PI*1.5, 0.0, 100.0);
+            console.dir(toPercent);
+            a.audio.seekToPercent(toPercent);
         });
 
         //Start the update loop.
@@ -54,15 +57,15 @@ app.main = (function() {
             a.drawing.drawAudioBar(i*(barWidth+barSpacing), a.viewport.height/2.5, barWidth, aData[i], a.viewport.height/4, [255, 0, 0]);
         }
 
-        // for (let i = 150; i > 0; i -= 3) {
-        //     a.drawing.drawCircle(a.viewport.width/2 - i, a.viewport.height/2 + i, 300, "rgba(0, 0, 0, 0.01)");
-        // }
-        // let grad = a.ctx.createLinearGradient(a.viewport.width/2 + 300, a.viewport.height/2 - 300, a.viewport.width/2 - 300, a.viewport.height/2 + 300);
-        // grad.addColorStop(0, "rgba(235, 235, 235, 1.0)");
-        // grad.addColorStop(1, "rgba(255, 255, 255, 1.0)");
-        // a.drawing.drawCircle(a.viewport.width/2, a.viewport.height/2, 300, grad);
+        for (let i = 150; i > 0; i -= 3) {
+            a.drawing.drawCircle(a.viewport.width/2 - i, a.viewport.height/2 + i, 300, "rgba(0, 0, 0, 0.01)");
+        }
+        let grad = a.ctx.createLinearGradient(a.viewport.width/2 + 300, a.viewport.height/2 - 300, a.viewport.width/2 - 300, a.viewport.height/2 + 300);
+        grad.addColorStop(0, "rgba(235, 235, 235, 1.0)");
+        grad.addColorStop(1, "rgba(255, 255, 255, 1.0)");
+        a.drawing.drawCircle(a.viewport.width/2, a.viewport.height/2, 300, grad);
 
-        // a.drawing.drawScrubber();
+        a.drawing.drawScrubber();
     }
 
     function resize() {
@@ -78,6 +81,9 @@ app.main = (function() {
     return {
         animationID: animationID,
         debug: debug,
+        mouseDown: function() {
+            return mouseDown;
+        },
         paused: paused,
         init: init,
         update: update,

@@ -11,26 +11,27 @@ app.audio = (function() {
             id: 0,
             hasBuffer: false,
             buffer: undefined,
+            name: "No Vacancy",
+            artist: "OneRepublic",
+            album: "No Vacancy",
+            filepath: "./media/noVacancy.mp3"
+        },
+        {
+            id: 1,
+            hasBuffer: false,
+            buffer: undefined,
             name: "Firewall",
             artist: "Les Friction",
             album: "Dark Matter",
             filepath: "./media/firewall.mp3"
         }, {
-            id: 1,
+            id: 2,
             hasBuffer: false,
             buffer: undefined,
             name: "Dark Matter",
             artist: "Les Friction",
             album: "Dark Matter",
             filepath: "./media/darkMatter.mp3"
-        }, {
-            id: 2,
-            hasBuffer: false,
-            buffer: undefined,
-            name: "No Vacancy",
-            artist: "OneRepublic",
-            album: "No Vacancy",
-            filepath: "./media/noVacancy.mp3"
         }
     ];
 

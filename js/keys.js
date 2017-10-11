@@ -13,7 +13,7 @@ app.keys = (function() {
         "KEY_SPACE": 32,
         "KEY_SHIFT": 16
     });
-    let mouseDown = false;
+    let mouse;
 
     function init() { // event listeners
         window.addEventListener("keydown", function(e) {
@@ -23,7 +23,21 @@ app.keys = (function() {
         window.addEventListener("keyup", function(e) {
             keydown[e.keyCode] = false;
         });
+
+        window.addEventListener("mousemove", function(e) {
+            mouse = [
+                e.pageX - e.target.offsetLeft,
+                e.pageY - e.target.offsetTop
+            ];
+        });
     }
 
-    return {keydown: keydown, KEYBOARD: KEYBOARD, init: init, mouseDown: mouseDown}
+    return {
+        keydown: keydown,
+        KEYBOARD: KEYBOARD,
+        init: init,
+        mouse: function() {
+            return mouse;
+        }
+    }
 }());
