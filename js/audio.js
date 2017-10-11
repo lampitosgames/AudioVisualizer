@@ -15,8 +15,7 @@ app.audio = (function() {
             artist: "OneRepublic",
             album: "No Vacancy",
             filepath: "./media/noVacancy.mp3"
-        },
-        {
+        }, {
             id: 1,
             hasBuffer: false,
             buffer: undefined,
@@ -81,9 +80,13 @@ app.audio = (function() {
      */
     function update() {
         //If a promise is waiting to be resolved (new song loading), pause
-        if (newAudioPromise != undefined) return;
+        if (newAudioPromise != undefined)
+            return;
+
         //If the audio is paused, return
-        if (paused) return;
+        if (paused)
+            return;
+
         //Check if the current song is done playing.  If it is, go to the next one.
         if (getAudioLength() != -1 && audioTimestamp > getAudioLength()) {
             newAudioPromise = playNewAudio((currentSong + 1) % songs.length);
@@ -182,7 +185,7 @@ app.audio = (function() {
                     //Start the buffer
                     startTheBuffer();
                 }, reject);
-            //Prevent this code from running if the buffer needs to be converted to prevent errors
+                //Prevent this code from running if the buffer needs to be converted to prevent errors
             } else {
                 //Start the buffer
                 startTheBuffer();
@@ -274,7 +277,7 @@ app.audio = (function() {
     /**
      * Update the member variables of the audio analyser to change the bounds of its output
      */
-    function updateAudioAnalyser(fftSize = NUM_SAMPLES, smoothingTimeConstant = 0.99, minDecibels = -100, maxDecibels = 50) {
+    function updateAudioAnalyser(fftSize = NUM_SAMPLES, smoothingTimeConstant = 0.8, minDecibels = -100, maxDecibels = 50) {
         nodes.analyserNode.fftSize = fftSize;
         nodes.analyserNode.smoothingTimeConstant = smoothingTimeConstant;
         nodes.analyserNode.minDecibels = minDecibels;

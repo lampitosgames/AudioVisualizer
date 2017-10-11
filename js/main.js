@@ -66,6 +66,13 @@ app.main = (function() {
         a.drawing.drawCircle(a.viewport.width/2, a.viewport.height/2, 300, grad);
 
         a.drawing.drawScrubber();
+        a.drawing.drawAudioCircle(a.viewport.width/2, a.viewport.height/2, 270, aData);
+
+        app.ctx.textAlign = "center";
+        app.ctx.textBaseline = "middle";
+        let songData = a.audio.songs[a.audio.currentSong()];
+        a.utils.fillText(songData.name, a.viewport.width/2, a.viewport.height/2 - 18, "bold 28pt Arial", "red");
+        a.utils.fillText(songData.artist, a.viewport.width/2, a.viewport.height/2 + 20, "12pt Arial", "red");
     }
 
     function resize() {
