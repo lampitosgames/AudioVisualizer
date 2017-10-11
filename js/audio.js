@@ -414,6 +414,7 @@ app.audio = (function() {
         seekToTime: seekToTime,
         seekToPercent: seekToPercent,
         getAudioLength: getAudioLength,
+        setPlaybackSpeed: setPlaybackSpeed,
         getAudioTimestamp: function() {
             return audioTimestamp;
         },
