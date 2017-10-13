@@ -15,6 +15,12 @@ app.main = (function() {
     let mouseDown = false;
     let scrubPercent = 0;
 
+    let bezierCurves = [];
+
+    let DRAW_BEZIER = "DRAW_BEZIER";
+    let DRAW_LINE = "DRAW_LINE";
+    let graphType = DRAW_LINE;
+
     function init() {
         //Init canvas
         app.canvas = document.getElementById("canvas");
@@ -47,29 +53,29 @@ app.main = (function() {
         //Visualiser
         a.ctx.fillStyle = "red";
         let aData = a.audio.data();
-        let barSpacing = 2;
-        let barWidth = (Math.floor(a.viewport.width) - aData.length * barSpacing) / aData.length;
 
-        for (var i = 0; i < aData.length; i++) {
-            a.drawing.drawAudioBar(i*(barWidth+barSpacing), a.viewport.height/2.5, barWidth, aData[i], a.viewport.height/4, [255, 0, 0]);
+        if (graphType == DRAW_LINE) {
+            let barSpacing = 2;
+            let barWidth = (Math.floor(a.viewport.width) - aData.length * barSpacing) / aData.length;
+            for (var i = 0; i < aData.length; i++) {
+                a.drawing.drawAudioBar(i * (barWidth + barSpacing), a.viewport.height / 2.5, barWidth, aData[i], a.viewport.height / 4, [255, 0, 0]);
+            }
+        } else if (graphType = DRAW_BEZIER) {
+            for (let i = 0; i < bezierCurves.length; i++) {
+                a.bezier.drawBezier(bezierCurves[i], aData, "red");
+            }
         }
 
-        for (let i = 150; i > 0; i -= 3) {
-            a.drawing.drawCircle(a.viewport.width/2 - i, a.viewport.height/2 + i, 300, "rgba(0, 0, 0, 0.01)");
-        }
-        let grad = a.ctx.createLinearGradient(a.viewport.width/2 + 300, a.viewport.height/2 - 300, a.viewport.width/2 - 300, a.viewport.height/2 + 300);
-        grad.addColorStop(0, "rgba(235, 235, 235, 1.0)");
-        grad.addColorStop(1, "rgba(255, 255, 255, 1.0)");
-        a.drawing.drawCircle(a.viewport.width/2, a.viewport.height/2, 300, grad);
-
-        a.drawing.drawScrubber();
-        a.drawing.drawAudioCircle(a.viewport.width/2, a.viewport.height/2, 270, aData);
+        a.scrubber.update();
 
         app.ctx.textAlign = "center";
         app.ctx.textBaseline = "middle";
         let songData = a.audio.songs[a.audio.currentSong()];
-        a.utils.fillText(songData.name, a.viewport.width/2, a.viewport.height/2 - 18, "bold 28pt Arial", "red");
-        a.utils.fillText(songData.artist, a.viewport.width/2, a.viewport.height/2 + 20, "12pt Arial", "red");
+        if (songData) {
+            a.utils.fillText(songData.name, a.viewport.width / 2, a.viewport.height / 2 - 18, "bold 28pt Arial", "red");
+            a.utils.fillText(songData.artist, a.viewport.width / 2, a.viewport.height / 2 + 20, "12pt Arial", "red");
+        }
+
     }
 
     function resize() {
@@ -80,6 +86,30 @@ app.main = (function() {
         a.canvas.setAttribute("height", a.viewport.height);
         //Replace the old context with the newer, resized version
         a.ctx = a.canvas.getContext('2d');
+
+        a.scrubber.resize();
+
+        bezierCurves = [];
+        bezierCurves.push(app.bezier.createBezierCurve(1.0 / 256, [
+            [
+                0, app.viewport.height / 3
+            ],
+            [
+                app.viewport.width / 2,
+                200
+            ],
+            [0, app.viewport.height]
+        ]));
+        bezierCurves.push(app.bezier.createBezierCurve(1.0 / 256, [
+            [
+                app.viewport.width, app.viewport.height * 2 / 3
+            ],
+            [
+                app.viewport.width / 2,
+                app.viewport.height - 200
+            ],
+            [app.viewport.width, 0]
+        ]));
     }
 
     return {

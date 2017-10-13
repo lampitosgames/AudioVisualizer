@@ -3,8 +3,17 @@
 app.drawing = (function() {
     let a = app;
     let scrubAngle;
-    let scrubX = 0, scrubY = 0;
+    let scrubX = 0,
+        scrubY = 0;
     let scrubbing = false;
+
+    function getGradient(x1, y1, x2, y2, colorStops) {
+        let grad = a.ctx.createLinearGradient(x1, y1, x2, y2);
+        for (let i = 0; i < colorStops; i++) {
+            grad.addColorStop(colorStops[i][0], colorStops[i][1]);
+        }
+        return grad;
+    }
 
     function drawCircle(x, y, rad, color) {
         let c = app.ctx;
@@ -15,63 +24,6 @@ app.drawing = (function() {
         c.closePath();
         c.fill();
         c.restore();
-    }
-
-    function drawScrubber() {
-        let c = app.ctx;
-        let songLength = a.audio.getAudioLength();
-        let circleX = a.viewport.width / 2;
-        let circleY = a.viewport.height / 2;
-        let radius = 300;
-
-        checkScrubbing();
-
-        scrubAngle = songLength == -1
-            ? -Math.PI / 2
-            : scrubAngle;
-        scrubX = circleX + Math.cos(scrubAngle) * radius;
-        scrubY = circleY + Math.sin(scrubAngle) * radius;
-
-        c.strokeStyle = "red";
-        c.fillStyle = "white";
-        c.lineWidth = 5;
-        c.beginPath();
-        c.arc(circleX, circleY, radius, -Math.PI / 2, scrubAngle);
-        c.stroke();
-        c.beginPath();
-        c.arc(scrubX, scrubY, 10, 0, Math.PI * 2);
-        c.fill();
-        c.stroke();
-    }
-
-    function checkScrubbing() {
-        let circleX = a.viewport.width / 2;
-        let circleY = a.viewport.height / 2;
-        let currentTime = a.audio.getAudioTimestamp();
-        let songLength = a.audio.getAudioLength();
-        let m = a.keys.mouse();
-
-        if (a.main.mouseDown() && a.utils.circlePointCollision(m[0], m[1], scrubX, scrubY, 20)) {
-            scrubbing = true;
-        }
-        if (!a.main.mouseDown() && scrubbing) {
-            scrubbing = false;
-            let toPercent = a.utils.map(scrubAngle, -Math.PI*0.5, Math.PI*1.5, 0.0, 100.0);
-            a.audio.seekToPercent(toPercent);
-        }
-
-        if (scrubbing) {
-            let vector = [
-                (m[0] - circleX),
-                (m[1] - circleY)
-            ];
-            scrubAngle = Math.atan(vector[1] / vector[0]);
-            if (vector[0] < 0) {
-                scrubAngle += Math.PI;
-            }
-        } else {
-            scrubAngle = a.utils.map(currentTime, 0.0, songLength, 0, Math.PI * 2) - Math.PI / 2;
-        }
     }
 
     function drawAudioCircle(x, y, radius, data) {
@@ -138,13 +90,5 @@ app.drawing = (function() {
         c.restore();
     }
 
-    return {
-        drawAudioBar: drawAudioBar,
-        drawCircle: drawCircle,
-        drawScrubber: drawScrubber,
-        drawAudioCircle: drawAudioCircle,
-        scrubAngle: function() {
-            return scrubAngle;
-        }
-    };
+    return {drawCircle: drawCircle, getGradient: getGradient, drawAudioBar: drawAudioBar, drawAudioCircle: drawAudioCircle};
 }());

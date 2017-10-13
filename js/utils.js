@@ -122,7 +122,7 @@ app.utils = {
     },
 
     circlePointCollision: function(px, py, cx, cy, cRadius) {
-        let dist = Math.sqrt((py-cy)*(py-cy) + (px-cx)*(px-cx));
+        let dist = Math.sqrt((py - cy) * (py - cy) + (px - cx) * (px - cx));
         return dist < cRadius;
     }
 }
