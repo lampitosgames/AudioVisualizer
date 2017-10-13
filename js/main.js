@@ -27,9 +27,6 @@ app.main = (function() {
         });
         app.canvas.addEventListener('mouseup', function() {
             mouseDown = false;
-            let toPercent = a.utils.map(a.drawing.scrubAngle(), -Math.PI*0.5, Math.PI*1.5, 0.0, 100.0);
-            console.dir(toPercent);
-            a.audio.seekToPercent(toPercent);
         });
 
         //Start the update loop.

@@ -121,51 +121,9 @@ app.utils = {
         c.restore();
     },
 
-    /**
-     * Draw a bezier curve manually
-     */
-    drawBezier: function(pointArray) {
-        let c = app.ctx;
-        c.save();
-        c.beginPath();
-        c.strokeStyle = "red";
-        c.lineJoin = "round";
-        c.lineWidth = 4;
-        c.moveTo(pointArray[0][0], pointArray[0][1]);
-
-        let threePointLerp = function(norm, tp0, tp1, tp2) {
-            let tp0tp1 = app.utils.lerp2D(norm, tp0, tp1);
-            let tp1tp2 = app.utils.lerp2D(norm, tp1, tp2);
-            return app.utils.lerp2D(norm, tp0tp1, tp1tp2);
-        }
-
-        //Loop over the time interval
-        for (let t=0; t<=1.0; t = t+1) {
-            //Store the current points array
-            let currentPoints = pointArray;
-            //While there are more than 2 points to lerp between
-            while (currentPoints.length > 2) {
-                let newArray = [];
-                //Loop through all current points and lerp to find a new point in pairs of 3
-                for (let i=0; i<currentPoints.length-2; i++) {
-                    //Push new lerped point to the newArray
-                    newArray.push(threePointLerp(t, currentPoints[i], currentPoints[i+1], currentPoints[i+2]));
-                }
-                //Replace current points with newly lerped points
-                currentPoints = newArray;
-            }
-
-            let drawPoint = currentPoints[0];
-            if (currentPoints.length > 1) {
-                //When there are only 2 points in the currentPoints array, lerp to get the final point
-                let drawPoint = app.utils.lerp2D(t, currentPoints[0], currentPoints[1]);
-            }
-
-            c.lineTo(drawPoint[0], drawPoint[1]);
-            c.stroke();
-        }
-        c.stroke();
-        c.restore();
+    circlePointCollision: function(px, py, cx, cy, cRadius) {
+        let dist = Math.sqrt((py-cy)*(py-cy) + (px-cx)*(px-cx));
+        return dist < cRadius;
     }
 }
 
