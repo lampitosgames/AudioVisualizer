@@ -31,7 +31,7 @@ app.drawing = (function() {
         //Normalize the data array and map it into the range we want the values to fall between
         let mappedData = new Array(data.length);
         for (let i = 0; i < data.length; i++) {
-            mappedData[i] = app.utils.map(data[i], 0, app.audio.getFloatDataMax(), 0, radius / 4);
+            mappedData[i] = app.utils.map(data[i], 0, app.audio.getDataMax(), 0, radius / 4);
         }
 
         //Set up canvas variables
@@ -63,7 +63,7 @@ app.drawing = (function() {
     }
 
     function drawAudioBar(x, y, width, dataVal, maxHeight, color) {
-        let height = a.utils.map(dataVal, 0, a.audio.getFloatDataMax(), width, maxHeight);
+        let height = a.utils.map(dataVal, 0, a.audio.getDataMax(), width, maxHeight);
         height = height == Infinity
             ? 0
             : height;

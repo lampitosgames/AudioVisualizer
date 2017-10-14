@@ -17,8 +17,7 @@ window.onload = function() {
 
     //Initialize main
     app.main.init();
-}
 
-document.onmousemove = function(e) {
-    app.mouse = app.getMouse(e);
+    //Bind events
+    app.keys.bindMouse();
 }

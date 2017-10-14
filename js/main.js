@@ -7,32 +7,27 @@ app.ctx = undefined;
 //Define main module
 app.main = (function() {
     let a = app;
-
     let animationID = 0;
-    let debug = true;
-    let paused = false;
-
-    let mouseDown = false;
-    let scrubPercent = 0;
 
     let bezierCurves = [];
 
-    let DRAW_BEZIER = "DRAW_BEZIER";
-    let DRAW_LINE = "DRAW_LINE";
+    const DRAW_BEZIER = "DRAW_BEZIER";
+    const DRAW_LINE = "DRAW_LINE";
     let graphType = DRAW_LINE;
 
     function init() {
         //Init canvas
-        app.canvas = document.getElementById("canvas");
+        a.canvas = document.getElementById("canvas");
         //Bind resize, then call it as part of initialization
         window.addEventListener('resize', resize);
         resize();
 
-        app.canvas.addEventListener('mousedown', function() {
-            mouseDown = true;
-        });
-        app.canvas.addEventListener('mouseup', function() {
-            mouseDown = false;
+        a.keys.keyUp("space", function() {
+            if (a.audio.paused()) {
+                a.audio.play();
+            } else {
+                a.audio.pause();
+            }
         });
 
         //Start the update loop.
@@ -61,20 +56,17 @@ app.main = (function() {
                 a.drawing.drawAudioBar(i * (barWidth + barSpacing), a.viewport.height / 2.5, barWidth, aData[i], a.viewport.height / 4, [255, 0, 0]);
             }
         } else if (graphType = DRAW_BEZIER) {
+            //If the length of the bezier curve doesn't match the length of the audio data, re-render the curve
+            if (bezierCurves[0].length != a.audio.getDataLength()) {
+                updateBezierCurves();
+            }
+
             for (let i = 0; i < bezierCurves.length; i++) {
                 a.bezier.drawBezier(bezierCurves[i], aData, "red");
             }
         }
 
         a.scrubber.update();
-
-        app.ctx.textAlign = "center";
-        app.ctx.textBaseline = "middle";
-        let songData = a.audio.songs[a.audio.currentSong()];
-        if (songData) {
-            a.utils.fillText(songData.name, a.viewport.width / 2, a.viewport.height / 2 - 18, "bold 28pt Arial", "red");
-            a.utils.fillText(songData.artist, a.viewport.width / 2, a.viewport.height / 2 + 20, "12pt Arial", "red");
-        }
 
     }
 
@@ -88,37 +80,41 @@ app.main = (function() {
         a.ctx = a.canvas.getContext('2d');
 
         a.scrubber.resize();
+        updateBezierCurves();
+    }
 
+    function updateBezierCurves() {
+        //Re-calculate bezier curves.  The values are hardcoded but use relative positioning based on the viewport
         bezierCurves = [];
-        bezierCurves.push(app.bezier.createBezierCurve(1.0 / 256, [
-            [
-                0, app.viewport.height / 3
-            ],
-            [
-                app.viewport.width / 2,
-                200
-            ],
-            [0, app.viewport.height]
+        let v = a.viewport;
+        let rel100 = 0.0909090909 * v.height;
+        bezierCurves.push(a.bezier.createBezierCurve(1.0/a.audio.getDataLength(), [
+            [0, v.height / 3],
+            [v.width / 2, 2*rel100],
+            [0, v.height]
         ]));
-        bezierCurves.push(app.bezier.createBezierCurve(1.0 / 256, [
-            [
-                app.viewport.width, app.viewport.height * 2 / 3
-            ],
-            [
-                app.viewport.width / 2,
-                app.viewport.height - 200
-            ],
-            [app.viewport.width, 0]
+        bezierCurves.push(a.bezier.createBezierCurve(1.0/a.audio.getDataLength(), [
+            [v.width, v.height * 2 / 3],
+            [v.width / 2, v.height - 2*rel100],
+            [v.width, 0]
+        ]));
+        bezierCurves.push(a.bezier.createBezierCurve(1.0/a.audio.getDataLength(), [
+            [0, 0],
+            [v.width * 3 / 7, 7*rel100],
+            [v.width * 3 / 7, -6*rel100],
+            [v.width * 2 / 3, 6*rel100],
+            [v.width * 7 / 8, 0]
+        ]));
+        bezierCurves.push(a.bezier.createBezierCurve(1.0/a.audio.getDataLength(), [
+            [v.width, v.height],
+            [v.width * 4 / 7, v.height - 7*rel100],
+            [v.width * 4 / 7, v.height + 6*rel100],
+            [v.width / 3, v.height - 6*rel100],
+            [v.width / 8, v.height]
         ]));
     }
 
     return {
-        animationID: animationID,
-        debug: debug,
-        mouseDown: function() {
-            return mouseDown;
-        },
-        paused: paused,
         init: init,
         update: update,
         resize: resize

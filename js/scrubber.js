@@ -3,41 +3,64 @@
 app.scrubber = (function() {
     let a = app;
 
-    //constants
+    //Constants
     let DEFAULT_LINE_WIDTH = 5;
     let HOVER_LINE_WIDTH = 10;
     let DEFAULT_SMALL_RADIUS = 7;
     let HOVER_SMALL_RADIUS = 10;
 
+    //Size of scrubber
     let scrubX,
         scrubY,
         scrubAngle;
+    //Boolean toggles for UI animation
     let scrubbing = false,
         hover = false;
+    //Radius and center of the scrubber
     let radius = 300;
+    let center = [];
+    //Radius of the pull tab
     let smallRadius = DEFAULT_SMALL_RADIUS;
-    let center;
 
     //Style values
     let lineWidth = DEFAULT_LINE_WIDTH;
     let color = "rgb(255, 0, 0)";
 
+    /**
+     * Init the scrubber
+     */
     function init() {}
 
+    /**
+     * Update and draw the scrubber
+     */
     function update() {
-        let aData = a.audio.data();
-        //draw the shadow
+        //draw the circle's shadow by layering very transparent circles in a line
         for (let i = Math.floor(radius / 2); i > 0; i -= 3) {
             a.drawing.drawCircle(center[0] - i, center[1] + i, radius, "rgba(0, 0, 0, 0.01)");
         }
-        //Draw the main circle
+        //Draw the main circle.  The gradient helps it stand out against the background
         let grad = a.ctx.createLinearGradient(center[0] + radius, center[1] - radius, center[0] - radius, center[1] + radius);
         grad.addColorStop(0, "rgba(235, 235, 235, 1.0)");
         grad.addColorStop(1, "rgba(255, 255, 255, 1.0)");
         a.drawing.drawCircle(center[0], center[1], radius, grad);
 
+        //TODO: Update anything that is inside the scrubber display
+        app.ctx.textAlign = "center";
+        app.ctx.textBaseline = "middle";
+        let songData = a.audio.songs[a.audio.currentSong()];
+        //TODO: Use HTML for this instead of drawing on the canvas
+        if (songData) {
+            a.utils.fillText(songData.name, a.viewport.width / 2, a.viewport.height / 2 - 18, "bold 28pt Arial", "red");
+            a.utils.fillText(songData.artist, a.viewport.width / 2, a.viewport.height / 2 + 20, "12pt Arial", "red");
+        }
+
+        //Grab the audio data
+        let aData = a.audio.data();
+        //Draw the visualized circle around the edge
+        a.drawing.drawAudioCircle(center[0], center[1], radius - 30, aData);
+        //Draw the audio scrubber.  It forms a circular ring around the background we just drew
         drawScrubber();
-        a.drawing.drawAudioCircle(a.viewport.width / 2, a.viewport.height / 2, radius - 30, aData);
     }
 
     function resize() {
@@ -58,6 +81,10 @@ app.scrubber = (function() {
         smallRadius = DEFAULT_SMALL_RADIUS;
         lineWidth = DEFAULT_LINE_WIDTH;
 
+    }
+
+    function setColor(newColor) {
+        color = newColor;
     }
 
     function drawScrubber() {
@@ -112,7 +139,7 @@ app.scrubber = (function() {
             smallRadius = Math.min(smallRadius + a.time.dt() * 40, HOVER_SMALL_RADIUS);
             hover = true;
             //If the mouse is also down, scrubbing is happening
-            if (a.main.mouseDown())
+            if (a.keys.mouseDown())
                 scrubbing = true;
             }
         else {
@@ -139,7 +166,7 @@ app.scrubber = (function() {
         }
 
         //If the mouse isn't down and we are still scrubbing
-        if (!a.main.mouseDown() && scrubbing) {
+        if (!a.keys.mouseDown() && scrubbing) {
             //Stop scrubbing
             scrubbing = false;
             //Seek to the point in the song that matches the scrub angle
@@ -157,5 +184,10 @@ app.scrubber = (function() {
         return collision1 && !collision2;
     }
 
-    return {init: init, update: update, resize: resize}
+    return {
+        init: init,
+        update: update,
+        resize: resize,
+        setColor: setColor
+    }
 }());

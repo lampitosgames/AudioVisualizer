@@ -53,6 +53,7 @@ app.audio = (function() {
 
     //Visualiser data
     let data = [];
+    let usingWaveform = false;
     //Maximum value of any single item in the data array.  By default, the data array is floats
     let floatDataMaxValue = Math.pow(255, 8);
 
@@ -70,6 +71,7 @@ app.audio = (function() {
         createAudioContext();
         //Set the volume
         nodes.gainNode.gain.value = DEFAULT_VOLUME;
+
         //Play the first song
         playNewAudio(DEFAULT_SONG);
     }
@@ -99,20 +101,23 @@ app.audio = (function() {
         //Update the song time
         audioTimestamp += app.time.dt() * nodes.sourceNode.playbackRate.value;
 
-        //Initialize data array
-        let floatRawData = new Float32Array(nodes.analyserNode.frequencyBinCount);
-        //Populate the array with frequency data
-        nodes.analyserNode.getFloatFrequencyData(floatRawData);
+        //Update with either frequency or waveform data
+        if (!usingWaveform) {
+            //Initialize data array
+            let floatRawData = new Float32Array(nodes.analyserNode.frequencyBinCount);
+            //Populate the array with frequency data
+            nodes.analyserNode.getFloatFrequencyData(floatRawData);
 
-        // //Initialize the waveform array
-        // let waveRawData = new Uint8Array(nodes.analyserNode.frequencyBinCount);
-        // //Populate the array with waveform data
-        // nodes.analyserNode.getByteTimeDomainData(waveRawData);
-
-        //Scale float data logrithmically and cut off the latter half.  This is so displaying is easier
-        data = new Float32Array(nodes.analyserNode.frequencyBinCount / 2);
-        for (let i = 0; i < data.length; i++) {
-            data[i] = Math.pow((floatRawData[i] + 145) * 2, 8);
+            //Scale float data logrithmically and cut off the latter half.  This is so displaying is easier
+            data = new Float32Array(nodes.analyserNode.frequencyBinCount / 2);
+            for (let i = 0; i < data.length; i++) {
+                data[i] = Math.pow((floatRawData[i] + 145) * 2, 8);
+            }
+        } else {
+            //Initialize the waveform array
+            data = new Uint8Array(nodes.analyserNode.frequencyBinCount);
+            //Populate the array with waveform data
+            nodes.analyserNode.getByteTimeDomainData(data);
         }
     }
 
@@ -225,6 +230,8 @@ app.audio = (function() {
         let newSource = audioCtx.createBufferSource();
         newSource.buffer = nodes.sourceNode.buffer;
         newSource.connect(nodes.sourceNodeOutput);
+        //Store the pause state before stopping the buffer.
+        let savePausedState = paused;
         //Stop the current source
         stopAudio();
         //Add the new source and start it at the inputted timestamp
@@ -232,7 +239,11 @@ app.audio = (function() {
         nodes.sourceNode.start(0, time);
         //Change the manually-tracked timestamp variables to match the updated song time
         audioTimestamp = time;
-        paused = false;
+        if (savePausedState) {
+            pauseAudio();
+        } else {
+            playAudio();
+        }
         nodes.sourceNode.playbackRate.value = playbackSpeed;
     }
 
@@ -400,16 +411,7 @@ app.audio = (function() {
     return {
         audioCtx: audioCtx,
         songs: songs,
-        currentSong: function() {
-            return currentSong;
-        },
         nodes: nodes,
-        data: function() {
-            return data;
-        },
-        getFloatDataMax: function() {
-            return floatDataMaxValue;
-        },
         init: init,
         update: update,
         play: playAudio,
@@ -418,11 +420,26 @@ app.audio = (function() {
         seekToPercent: seekToPercent,
         getAudioLength: getAudioLength,
         setPlaybackSpeed: setPlaybackSpeed,
-        getAudioTimestamp: function() {
-            return audioTimestamp;
-        },
         playNewAudio: playNewAudio,
         updateAudioAnalyser: updateAudioAnalyser,
-        playFromBuffer: playFromBuffer
+        playFromBuffer: playFromBuffer,
+        paused: function() {
+            return paused;
+        },
+        currentSong: function() {
+            return currentSong;
+        },
+        data: function() {
+            return data;
+        },
+        getDataMax: function() {
+            return usingWaveform ? 255 : floatDataMaxValue;
+        },
+        getDataLength: function() {
+            return nodes.analyserNode.fftSize/4;
+        },
+        getAudioTimestamp: function() {
+            return audioTimestamp;
+        }
     }
 }());

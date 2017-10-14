@@ -1,7 +1,14 @@
 "use strict";
 
 app.bezier = (function() {
-    function createBezierCurve(increment = 1.0/256, anchorPoints) {
+    /**
+     * A function that creates a bezier curve based on an array of anchorPoints
+     * Returns a rasterized list of points and their curve normals for drawing
+     *
+     * The increment parameter is how much the t value increases every iteration
+     * and 1/increment is how long the returned list will be
+     */
+    function createBezierCurve(increment = 1.0/app.audio.getDataLength(), anchorPoints) {
         let renderedCurvePoints = new Array(Math.floor(1/increment));
         //Loop over the interval
         let bezInd = 0;
@@ -28,6 +35,8 @@ app.bezier = (function() {
             bezInd += 1;
         }
 
+        //Get normals to the curve
+        //Not actually using derivatives, just an approximation
         let renderedCurve = new Array(renderedCurvePoints.length);
         renderedCurve[0] = {
             x: renderedCurvePoints[0][0],
@@ -38,27 +47,36 @@ app.bezier = (function() {
             renderedCurve[i] = {
                 x: renderedCurvePoints[i][0],
                 y: renderedCurvePoints[i][1],
-                norm: getNormal(renderedCurvePoints[i-1], renderedCurvePoints[i])
+                norm: getNormal(renderedCurvePoints[i-1], renderedCurvePoints[i]),
+                angle: 0
             }
+            //Get the angle of canvas rotation that will align it with the local coordinates
+            renderedCurve[i].angle = Math.atan2(-renderedCurve[i].norm[0], renderedCurve[i].norm[1]);
         }
-
         return renderedCurve;
     }
 
+    /**
+     * Draw an audio visualized curve
+     * Accepts a rendered curve, the audio data, and a color to draw in
+     */
     function drawBezier(curve, data, color) {
+        //If there is no data, do nothing
         if (!data) return;
-
         let c = app.ctx;
-
+        //For every position on the curve
         for (let n=0; n<curve.length; n++) {
+            //Save and restore the canvas state so any canvas rotations get undone
             c.save();
-
+            //Translate the canvas to the current point on the curve
             c.translate(curve[n].x, curve[n].y);
-            let angle = Math.atan2(-curve[n].norm[0], curve[n].norm[1]);
-            c.rotate(angle);
-
-            let height = app.utils.map(data[n], 0, app.audio.getFloatDataMax(), 2, app.viewport.height/4);
+            //Get the angle of the normal and rotate the canvas to it
+            c.rotate(curve[n].angle);
+            //Map the audio data to get a normalized height
+            let height = app.utils.map(data[n], 0, app.audio.getDataMax(), 2, app.viewport.height/4);
             height = height == Infinity ? 0 : height;
+
+            //Draw a line normal to the curve based on the intensity of the audio
             c.strokeStyle = color;
             c.lineWidth = 2;
             c.beginPath();
@@ -70,7 +88,9 @@ app.bezier = (function() {
         }
     }
 
-
+    /**
+     * Get a normal vector to a lineTo
+     */
     function getNormal(p1, p2) {
         let tangent = [
             p2[0]-p1[0],
@@ -80,6 +100,9 @@ app.bezier = (function() {
         return [tangent[1]/length, -tangent[0]/length];
     }
 
+    /**
+     * Helper function for bezier curves.
+     */
     function threePointLerp(norm, p0, p1, p2) {
         let p0p1 = app.utils.lerp2D(norm, p0, p1);
         let p1p2 = app.utils.lerp2D(norm, p1, p2);
