@@ -44,6 +44,9 @@ app.main = (function() {
         a.ctx.fillStyle = sc.backgroundColor();
         a.ctx.fillRect(0, 0, a.viewport.width, a.viewport.height);
 
+        a.ctx.save();
+        a.ctx.translate(sm.parallax[0], sm.parallax[1]);
+
         //Visualizer data
         let aData = s.audio.data;
 
@@ -65,10 +68,12 @@ app.main = (function() {
                 a.bezier.drawBezier(sm.bezierCurves[i], aData, sc.primaryColor());
             }
         }
+        a.ctx.restore();
 
         //Update the UI
         //TODO: Replace this with a ui module
         a.scrubber.update();
+        a.parallax.update();
     }
 
     /**
