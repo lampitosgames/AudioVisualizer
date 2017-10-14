@@ -167,6 +167,9 @@ app.keys = (function() {
                 case "ins":
                     keyCode = 45;
                     break;
+                case "windows":
+                    keyCode = 91;
+                    break;
                 default:
                     keyCode = key.toUpperCase().charCodeAt(0);
                     break;

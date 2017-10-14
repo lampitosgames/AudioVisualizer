@@ -43,6 +43,7 @@ app.keybinds = (function() {
     }
 
     function previousSong() {
+        if (a.keys.pressed("windows")) return;
         if (a.keys.pressed("shift")) return;
         //Get the new index.  Wrap if necissary
         let newIndex = sa.currentSong - 1 < 0 ? sa.songs.length-1 : sa.currentSong - 1;
@@ -51,6 +52,7 @@ app.keybinds = (function() {
     }
 
     function nextSong() {
+        if (a.keys.pressed("windows")) return;
         if (a.keys.pressed("shift")) return;
         //Get the new index.  Wrap if necissary
         let newIndex = (sa.currentSong + 1) % sa.songs.length;
@@ -72,6 +74,7 @@ app.keybinds = (function() {
     }
 
     function increaseVolume() {
+        if (a.keys.pressed("windows")) return;
         if (sa.nodes.gainNode.gain.value + sa.volumeIncrement <= 1.0) {
             sa.nodes.gainNode.gain.value += sa.volumeIncrement;
         } else {
@@ -80,6 +83,7 @@ app.keybinds = (function() {
     }
 
     function decreaseVolume() {
+        if (a.keys.pressed("windows")) return;
         if (sa.nodes.gainNode.gain.value - sa.volumeIncrement >= 0.1) {
             sa.nodes.gainNode.gain.value -= sa.volumeIncrement;
         } else {
