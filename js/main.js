@@ -7,9 +7,7 @@ app.ctx = undefined;
 //Define main module
 app.main = (function() {
     let a = app;
-    let s,
-        sm,
-        sc;
+    let s, sm, sc;
 
     /**
      * Init the main module.  Setup the canvas.  Call the initial resize and update
@@ -92,5 +90,9 @@ app.main = (function() {
         a.bezier.updateBezierCurves();
     }
 
-    return {init: init, update: update, resize: resize}
+    return {
+        init: init,
+        update: update,
+        resize: resize
+    }
 }());

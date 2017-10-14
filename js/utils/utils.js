@@ -79,48 +79,7 @@ app.utils = {
     randomRGBOpacity: function(opacity) {
         return "rgba(" + this.randomInt(0, 255) + "," + this.randomInt(0, 255) + "," + this.randomInt(0, 255) + "," + this.clamp(opacity, 0.0, 1.0) + ")";
     },
-
-    //Drawing
-    /**
-     * Write text with given parameters.
-     * From: Boomshine-ICE-start
-     */
-    fillText: function(string, x, y, css, color) {
-        let c = app.ctx;
-        c.save();
-        // https://developer.mozilla.org/en-US/docs/Web/CSS/font
-        c.font = css;
-        c.fillStyle = color;
-        c.fillText(string, x, y);
-        c.restore();
-    },
-    /**
-     * Fill a circle
-     */
-    fillCircle: function(x, y, radius, fillColor) {
-        let c = app.ctx;
-        c.fillStyle = fillColor;
-        c.globalAlpha = 0.75;
-        c.beginPath();
-        c.arc(x, y, radius, 0, Math.PI * 2);
-        c.fill();
-        c.globalAlpha = 1.0;
-    },
-    /**
-     * Stroke a Circle
-     * this sounds a little dirty 0_0
-     */
-    strokeCircle: function(x, y, radius, strokeColor, lineWidth) {
-        let c = app.ctx;
-        c.save();
-        c.beginPath();
-        c.strokeStyle = strokeColor;
-        c.lineWidth = lineWidth;
-        c.arc(x, y, radius, 0, Math.PI * 2);
-        c.stroke();
-        c.restore();
-    },
-
+    //Determine if a point is colliding with a circle
     circlePointCollision: function(px, py, cx, cy, cRadius) {
         let dist = Math.sqrt((py - cy) * (py - cy) + (px - cx) * (px - cx));
         return dist < cRadius;

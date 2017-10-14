@@ -3,9 +3,14 @@
 //Timing module
 app.time = (function() {
     let a = app;
+    //Shorthand time state
     let st;
 
+    /**
+     * Init the time module
+     */
     function init() {
+        //Get shorthand time state
         st = app.state.time;
     }
 

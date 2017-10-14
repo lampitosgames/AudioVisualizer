@@ -14,6 +14,15 @@ app.drawing = (function() {
         c.restore();
     }
 
+    function drawText(string, x, y, css, color) {
+        let c = app.ctx;
+        c.save();
+        c.font = css;
+        c.fillStyle = color;
+        c.fillText(string, x, y);
+        c.restore();
+    }
+
     function drawAudioCircle(x, y, radius, data, color) {
         let c = app.ctx;
         //Normalize the data array and map it into the range we want the values to fall between
@@ -55,14 +64,17 @@ app.drawing = (function() {
         height = height == Infinity
             ? 0
             : height;
-        let transparencyHeight = Math.pow(height, 1.3);
-        let transY = y - transparencyHeight * 0.25;
-        let grad = a.ctx.createLinearGradient(x, parseFloat(transY), x, parseFloat(transY + transparencyHeight));
-        grad.addColorStop(0, "rgba(" + color[0] + ", " + color[1] + ", " + color[2] + ", 0.0)");
-        grad.addColorStop(0.5, "rgba(" + color[0] + ", " + color[1] + ", " + color[2] + ", 0.25)");
-        grad.addColorStop(1, "rgba(" + color[0] + ", " + color[1] + ", " + color[2] + ", 0.0)");
 
-        drawLine(x, transY, width, transparencyHeight, grad);
+        //Only draw the gradient if we aren't using waveform data
+        if (!a.state.audio.usingWaveform) {
+            let transparencyHeight = Math.pow(height, 1.3);
+            let transY = y - transparencyHeight * 0.25;
+            let grad = a.ctx.createLinearGradient(x, parseFloat(transY), x, parseFloat(transY + transparencyHeight));
+            grad.addColorStop(0, "rgba(" + color[0] + ", " + color[1] + ", " + color[2] + ", 0.0)");
+            grad.addColorStop(0.5, "rgba(" + color[0] + ", " + color[1] + ", " + color[2] + ", 0.25)");
+            grad.addColorStop(1, "rgba(" + color[0] + ", " + color[1] + ", " + color[2] + ", 0.0)");
+            drawLine(x, transY, width, transparencyHeight, grad);
+        }
         drawLine(x, y, width, height, "rgba(" + color[0] + ", " + color[1] + ", " + color[2] + ", 1.0)")
     }
 
@@ -80,6 +92,7 @@ app.drawing = (function() {
 
     return {
         drawCircle: drawCircle,
+        drawText: drawText,
         drawAudioBar: drawAudioBar,
         drawAudioCircle: drawAudioCircle
     };

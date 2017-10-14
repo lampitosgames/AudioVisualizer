@@ -26,12 +26,12 @@ app.file = (function() {
         //check out this link: https://ericbidelman.tumblr.com/post/8343485440/reading-mp3-id3-tags-in-javascript
         fileReader.onload = function() {
             //Get the new song's ID
-            let songId = app.audio.songs.length;
+            let songId = app.state.audio.songs.length;
             //Get the string split index to cut out the global filepath and leave us with just the filename
             let fName = uploaderElement.value;
             let splitIndex = (fName.indexOf('\\') >= 0 ? fName.lastIndexOf('\\') : fName.lastIndexOf('/'));
             //Push the new song to the song array.
-            app.audio.songs.push({
+            app.state.audio.songs.push({
                 id: songId,
                 hasBuffer: true,
                 buffer: fileReader.result,
@@ -40,7 +40,7 @@ app.file = (function() {
                 album: "Unknown"
             });
             //Play the song
-            app.audio.playFromBuffer(songId);
+            app.audio.playFromBuffer(songId, app.state.audio.paused);
         }
 
     }

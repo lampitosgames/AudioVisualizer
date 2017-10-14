@@ -44,8 +44,8 @@ app.scrubber = (function() {
         app.ctx.textBaseline = "middle";
         let songData = s.audio.songs[s.audio.currentSong];
         if (songData) {
-            a.utils.fillText(songData.name, center[0], center[1] - 18, "bold 28pt Arial", sc.primaryColor());
-            a.utils.fillText(songData.artist, center[0], center[1] + 20, "12pt Arial", sc.primaryColor());
+            a.drawing.drawText(songData.name, center[0], center[1] - 18, "bold 28pt Arial", sc.primaryColor());
+            a.drawing.drawText(songData.artist, center[0], center[1] + 20, "12pt Arial", sc.primaryColor());
         }
 
         //Grab the audio data

@@ -12,6 +12,7 @@ app.keybinds = (function() {
         ss = s.scrubber;
 
         a.keys.keyUp("g", toggleBezierCurveDisplay);
+        a.keys.keyUp("w", toggleWaveform);
         a.keys.keyUp("space", pausePlay);
         a.keys.keyUp("left", previousSong);
         a.keys.keyDown("left", fastBackward);
@@ -19,19 +20,6 @@ app.keybinds = (function() {
         a.keys.keyDown("right", fastForward);
         a.keys.keyDown("up", increaseVolume);
         a.keys.keyDown("down", decreaseVolume);
-
-        a.keys.keyDown("i", function() {
-            sm.parallax[0] += 10;
-        });
-        a.keys.keyDown("k", function() {
-            sm.parallax[0] -= 10;
-        });
-        a.keys.keyDown("u", function() {
-            ss.parallax[1] -= 10;
-        });
-        a.keys.keyDown("j", function() {
-            ss.parallax[1] += 10;
-        });
     }
 
     function toggleBezierCurveDisplay() {
@@ -40,6 +28,10 @@ app.keybinds = (function() {
         } else if (sm.graphType === s.e.DRAW_BEZIER) {
             sm.graphType = s.e.DRAW_LINE;
         }
+    }
+
+    function toggleWaveform() {
+        sa.usingWaveform = !sa.usingWaveform;
     }
 
     function pausePlay() {

@@ -19,6 +19,7 @@ app.state = (function() {
         DEFAULT_NUM_SAMPLES: 1024
     };
 
+    //Main module state
     let main = {
         //Type of audio vis to draw
         graphType: e.DRAW_LINE,
@@ -27,9 +28,13 @@ app.state = (function() {
         animationID: 0
     };
 
+    //Audio module state
     let audio = {
+        //Audio context
         audioCtx: undefined,
+        //The currently playing song
         currentSong: e.DEFAULT_SONG,
+        //Song metadata
         songs: [
             {
                 id: 0,
@@ -65,21 +70,30 @@ app.state = (function() {
                 filepath: "./media/devastationAndReform.mp3"
             }
         ],
+        //Audio nodes
         nodes: {
             sourceNodeOutput: undefined,
             sourceNode: undefined,
             gainNode: undefined,
             analyserNode: undefined
         },
+        //Visualizer data
         data: [],
+        //Is the data waveform?
         usingWaveform: false,
+        //How much to scale the frequency data by to bring out differences
         exponentScale: 8,
+        //Is the audio paused
         paused: false,
+        //Timestamp in the current song
         audioTimestamp: 0.0,
+        //Speed of playback
         playbackSpeed: 1.0,
+        //How much to increase/decrease volume when using up/down keys
         volumeIncrement: 0.1
     };
 
+    //Scrubber module state
     let scrubber = {
         //Position of the pull tab
         scrubX: 0,
@@ -94,13 +108,19 @@ app.state = (function() {
         lineWidth: e.DEFAULT_LINE_WIDTH
     };
 
+    //Time module state
     let time = {
+        //Delta time
         dt: 0,
+        //Total time the app has been running
         runTime: 0,
+        //Timestamp of the last update loop
         lastTime: 0,
+        //Current frames per second
         fps: 0
     }
 
+    //App-wide color constants
     let color = {
         a_primaryColor: [
             255, 0, 0, 1.0

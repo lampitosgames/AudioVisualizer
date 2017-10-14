@@ -84,13 +84,15 @@ app.audio = (function() {
         if (!sa.songs[id])
             return;
 
+        //Store the paused state before switching buffers
+        let savePausedState = sa.paused;
         //Stop the previous song
         stopAudio();
 
         //If there is already a buffer loaded for this song, don't load another
         if (sa.songs[id].hasBuffer) {
             //Play from the already-loaded buffer, returning a promise
-            return playFromBuffer(id);
+            return playFromBuffer(id, savePausedState);
         }
 
         //Asyncronously load a new song into the audio context
@@ -100,6 +102,9 @@ app.audio = (function() {
                 //Play the song
                 startAudio();
                 sa.currentSong = id;
+                if (savePausedState) {
+                    pauseAudio();
+                }
                 resolve();
             }, reject);
         });
@@ -110,7 +115,7 @@ app.audio = (function() {
      * This prevents the server form having to re-fetch already loaded audio
      * This function assumes that songs[id].buffer is defined as an ArrayBuffer or an AudioBuffer
      */
-    function playFromBuffer(id) {
+    function playFromBuffer(id, savePausedState = false) {
         //Stop the currently playing audio
         stopAudio();
         //If the sourceNode already has a defined buffer, re-create it
@@ -129,6 +134,9 @@ app.audio = (function() {
                 sa.nodes.sourceNode.buffer = sa.songs[id].buffer;
                 //Start the audio
                 startAudio();
+                if (savePausedState) {
+                    pauseAudio();
+                }
                 resolve();
             }
             //If the buffer is an ArrayBuffer, decode it into an AudioBuffer
