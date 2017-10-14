@@ -31,6 +31,14 @@ app.audio = (function() {
             artist: "Les Friction",
             album: "Dark Matter",
             filepath: "./media/darkMatter.mp3"
+        }, {
+            id: 3,
+            hasBuffer: false,
+            buffer: undefined,
+            name: "Devastation and Reform",
+            artist: "Relient K",
+            album: "Five Score and Seven Years Ago",
+            filepath: "./media/devastationAndReform.mp3"
         }
     ];
 

@@ -1,6 +1,46 @@
 "use strict";
 
 app.bezier = (function() {
+    let a = app;
+    /**
+     * This function re-calculates the hardcoded bezier anchor points for the main module
+     * While the values are hardcoded, they are relative to the viewport size
+     */
+    function updateBezierCurves() {
+        //Re-calculate bezier curves.  The values are hardcoded but use relative positioning based on the viewport
+        a.state.main.bezierCurves = [];
+        //Store the viewport object shorthand
+        let v = a.viewport;
+        //Relative size modifier of 100px on a 1080p screen.
+        let rel100 = 0.0909090909 * v.height;
+
+        //Hardcoded bezier curves
+        a.state.main.bezierCurves.push(createBezierCurve(1.0/a.audio.getDataLength(), [
+            [0, v.height / 3],
+            [v.width / 2, 2*rel100],
+            [0, v.height]
+        ]));
+        a.state.main.bezierCurves.push(createBezierCurve(1.0/a.audio.getDataLength(), [
+            [v.width, v.height * 2 / 3],
+            [v.width / 2, v.height - 2*rel100],
+            [v.width, 0]
+        ]));
+        a.state.main.bezierCurves.push(createBezierCurve(1.0/a.audio.getDataLength(), [
+            [0, 0],
+            [v.width * 3 / 7, 7*rel100],
+            [v.width * 3 / 7, -6*rel100],
+            [v.width * 2 / 3, 6*rel100],
+            [v.width * 7 / 8, 0]
+        ]));
+        a.state.main.bezierCurves.push(createBezierCurve(1.0/a.audio.getDataLength(), [
+            [v.width, v.height],
+            [v.width * 4 / 7, v.height - 7*rel100],
+            [v.width * 4 / 7, v.height + 6*rel100],
+            [v.width / 3, v.height - 6*rel100],
+            [v.width / 8, v.height]
+        ]));
+    }
+
     /**
      * A function that creates a bezier curve based on an array of anchorPoints
      * Returns a rasterized list of points and their curve normals for drawing
@@ -110,6 +150,7 @@ app.bezier = (function() {
     }
 
     return {
+        updateBezierCurves: updateBezierCurves,
         createBezierCurve: createBezierCurve,
         drawBezier: drawBezier
     }

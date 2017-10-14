@@ -13,7 +13,7 @@ window.onload = function() {
     app.time.init();
     app.file.init();
     app.scrubber.init();
-    // app.drawing.init();
+    app.keybinds.init();
 
     //Initialize main
     app.main.init();
