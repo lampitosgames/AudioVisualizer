@@ -11,6 +11,9 @@ app.keys = (function() {
     let mouseDown;
 
     function init() {
+        //Start the mouse in the center
+        // mouse = [a.viewport.width/2, a.viewport.height/2];
+
         //Add an event listener for keydown
         window.addEventListener("keydown", function(e) {
             //If this key isn't in the object, create data for it

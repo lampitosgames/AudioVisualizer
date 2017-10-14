@@ -7,7 +7,9 @@ app.ctx = undefined;
 //Define main module
 app.main = (function() {
     let a = app;
-    let s, sm, sc;
+    let s,
+        sm,
+        sc;
 
     /**
      * Init the main module.  Setup the canvas.  Call the initial resize and update
@@ -39,28 +41,28 @@ app.main = (function() {
         a.audio.update();
 
         //Override everything with a full-size background
-        a.ctx.fillStyle = sc.backgroundColor;
+        a.ctx.fillStyle = sc.backgroundColor();
         a.ctx.fillRect(0, 0, a.viewport.width, a.viewport.height);
 
-        //Visualiser
-        let aData = a.audio.data();
+        //Visualizer data
+        let aData = s.audio.data;
 
         //If the current visualization method is a straight line, draw a line visualization
-        if (sm.graphType === sm.graphTypes.DRAW_LINE) {
+        if (sm.graphType === s.e.DRAW_LINE) {
             let barSpacing = 2;
             let barWidth = (Math.floor(a.viewport.width) - aData.length * barSpacing) / aData.length;
             for (var i = 0; i < aData.length; i++) {
-                a.drawing.drawAudioBar(i * (barWidth + barSpacing), a.viewport.height / 2.5, barWidth, aData[i], a.viewport.height / 4, [255, 0, 0]);
+                a.drawing.drawAudioBar(i * (barWidth + barSpacing), a.viewport.height / 2.5, barWidth, aData[i], a.viewport.height / 4, sc.a_primaryColor);
             }
-        //If the current visualization method is bezier curves, draw all bezier curves
-        } else if (sm.graphType === sm.graphTypes.DRAW_BEZIER) {
+            //If the current visualization method is bezier curves, draw all bezier curves
+        } else if (sm.graphType === s.e.DRAW_BEZIER) {
             //If the length of the bezier curve doesn't match the length of the audio data, re-render the curve
             if (sm.bezierCurves[0].length != a.audio.getDataLength()) {
                 a.bezier.updateBezierCurves();
             }
             //Draw every bezier curve in the primary color
             for (let i = 0; i < sm.bezierCurves.length; i++) {
-                a.bezier.drawBezier(sm.bezierCurves[i], aData, sc.primaryColor);
+                a.bezier.drawBezier(sm.bezierCurves[i], aData, sc.primaryColor());
             }
         }
 
@@ -90,9 +92,5 @@ app.main = (function() {
         a.bezier.updateBezierCurves();
     }
 
-    return {
-        init: init,
-        update: update,
-        resize: resize
-    }
+    return {init: init, update: update, resize: resize}
 }());

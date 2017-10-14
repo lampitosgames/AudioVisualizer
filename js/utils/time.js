@@ -3,14 +3,10 @@
 //Timing module
 app.time = (function() {
     let a = app;
-
-    let dt;
-    let lastTime = 0;
-    let runTime = 0;
-    let fps;
+    let st;
 
     function init() {
-        return;
+        st = app.state.time;
     }
 
     /**
@@ -21,11 +17,11 @@ app.time = (function() {
         //Get time in ms
         now = performance.now();
         //Get capped instant FPS (from last frame to this frame)
-        fps = a.utils.clamp(1000 / (now - lastTime), 5, 60);
+        st.fps = a.utils.clamp(1000 / (now - st.lastTime), 5, 60);
         //Store this frame time
-        lastTime = now;
+        st.lastTime = now;
         //Return the last frame's time (delta time) in seconds
-        return 1 / fps;
+        return 1 / st.fps;
     }
 
     /**
@@ -33,9 +29,9 @@ app.time = (function() {
      */
     function update() {
         //Get the delta time
-        dt = calculateDeltaTime();
+        st.dt = calculateDeltaTime();
         //Add the delta to the total runtime
-        runTime += dt;
+        st.runTime += st.dt;
     }
 
     //Exports
@@ -44,13 +40,13 @@ app.time = (function() {
         update: update,
         init: init,
         dt: function() {
-            return dt;
+            return st.dt;
         },
         runTime: function() {
-            return runTime;
+            return st.runTime;
         },
         fps: function() {
-            return fps;
+            return st.fps;
         }
-    }
+    };
 }());

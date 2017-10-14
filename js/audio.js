@@ -3,90 +3,31 @@
 //Audio module
 app.audio = (function() {
     let a = app;
+    let s, sa;
 
-    //Song metadata
-    let currentSong;
-    let songs = [
-        {
-            id: 0,
-            hasBuffer: false,
-            buffer: undefined,
-            name: "No Vacancy",
-            artist: "OneRepublic",
-            album: "No Vacancy",
-            filepath: "./media/noVacancy.mp3"
-        }, {
-            id: 1,
-            hasBuffer: false,
-            buffer: undefined,
-            name: "Firewall",
-            artist: "Les Friction",
-            album: "Dark Matter",
-            filepath: "./media/firewall.mp3"
-        }, {
-            id: 2,
-            hasBuffer: false,
-            buffer: undefined,
-            name: "Dark Matter",
-            artist: "Les Friction",
-            album: "Dark Matter",
-            filepath: "./media/darkMatter.mp3"
-        }, {
-            id: 3,
-            hasBuffer: false,
-            buffer: undefined,
-            name: "Devastation and Reform",
-            artist: "Relient K",
-            album: "Five Score and Seven Years Ago",
-            filepath: "./media/devastationAndReform.mp3"
-        }
-    ];
-
-    //Audio API variables
-    let audioCtx = undefined;
     //Promise used for async loading of new songs
     let newAudioPromise = undefined;
-    //Active audio nodes
-    let nodes = {
-        sourceNodeOutput: undefined,
-        sourceNode: undefined,
-        gainNode: undefined,
-        analyserNode: undefined
-    };
-
-    //Audio constants
-    const DEFAULT_VOLUME = 1.0;
-    const DEFAULT_SONG = 0;
-    const NUM_SAMPLES = 1024;
-
-    //Visualiser data
-    let data = [];
-    let usingWaveform = false;
-    //Maximum value of any single item in the data array.  By default, the data array is floats
-    let floatDataMaxValue = Math.pow(255, 8);
-
-    //Audio timing trackers
-    let audioTimestamp = 0.0;
-    let paused = false;
-    let playbackSpeed = 1.0;
 
     /**
      * Initialize the audio module
      * Load and play the first song
      */
     function init() {
+        //Get shorthand state variables
+        s = app.state;
+        sa = app.state.audio;
         //Initialize audio context and nodes
         createAudioContext();
         //Set the volume
-        nodes.gainNode.gain.value = DEFAULT_VOLUME;
+        sa.nodes.gainNode.gain.value = s.e.DEFAULT_VOLUME;
 
         //Play the first song
-        playNewAudio(DEFAULT_SONG);
+        playNewAudio(s.e.DEFAULT_SONG);
     }
 
     /**
      * Update the audio module.
-     * Play new songs, update Visualiser data, apply audio effects
+     * Play new songs, update visualizer data, apply audio effects
      */
     function update() {
         //If a promise is waiting to be resolved (new song loading), pause
@@ -94,12 +35,12 @@ app.audio = (function() {
             return;
 
         //If the audio is paused, return
-        if (paused)
+        if (sa.paused)
             return;
 
         //Check if the current song is done playing.  If it is, go to the next one.
-        if (getAudioLength() != -1 && audioTimestamp > getAudioLength()) {
-            newAudioPromise = playNewAudio((currentSong + 1) % songs.length);
+        if (getAudioLength() != -1 && sa.audioTimestamp > getAudioLength()) {
+            newAudioPromise = playNewAudio((sa.currentSong + 1) % sa.songs.length);
             newAudioPromise.then(function() {
                 newAudioPromise = undefined;
             });
@@ -107,25 +48,25 @@ app.audio = (function() {
         }
 
         //Update the song time
-        audioTimestamp += app.time.dt() * nodes.sourceNode.playbackRate.value;
+        sa.audioTimestamp += app.time.dt() * sa.nodes.sourceNode.playbackRate.value;
 
         //Update with either frequency or waveform data
-        if (!usingWaveform) {
+        if (!sa.usingWaveform) {
             //Initialize data array
-            let floatRawData = new Float32Array(nodes.analyserNode.frequencyBinCount);
+            let floatRawData = new Float32Array(sa.nodes.analyserNode.frequencyBinCount);
             //Populate the array with frequency data
-            nodes.analyserNode.getFloatFrequencyData(floatRawData);
+            sa.nodes.analyserNode.getFloatFrequencyData(floatRawData);
 
             //Scale float data logrithmically and cut off the latter half.  This is so displaying is easier
-            data = new Float32Array(nodes.analyserNode.frequencyBinCount / 2);
-            for (let i = 0; i < data.length; i++) {
-                data[i] = Math.pow((floatRawData[i] + 145) * 2, 8);
+            sa.data = new Float32Array(sa.nodes.analyserNode.frequencyBinCount / 2);
+            for (let i = 0; i < sa.data.length; i++) {
+                sa.data[i] = Math.pow((floatRawData[i] + 145) * 2, sa.exponentScale);
             }
         } else {
             //Initialize the waveform array
-            data = new Uint8Array(nodes.analyserNode.frequencyBinCount);
+            sa.data = new Uint8Array(sa.nodes.analyserNode.frequencyBinCount);
             //Populate the array with waveform data
-            nodes.analyserNode.getByteTimeDomainData(data);
+            sa.nodes.analyserNode.getByteTimeDomainData(sa.data);
         }
     }
 
@@ -140,14 +81,14 @@ app.audio = (function() {
             id = getSongId(id);
 
         //Prevent invalid calls
-        if (!songs[id])
+        if (!sa.songs[id])
             return;
 
         //Stop the previous song
         stopAudio();
 
         //If there is already a buffer loaded for this song, don't load another
-        if (songs[id].hasBuffer) {
+        if (sa.songs[id].hasBuffer) {
             //Play from the already-loaded buffer, returning a promise
             return playFromBuffer(id);
         }
@@ -158,7 +99,7 @@ app.audio = (function() {
             loadAudio(id, function() {
                 //Play the song
                 startAudio();
-                currentSong = id;
+                sa.currentSong = id;
                 resolve();
             }, reject);
         });
@@ -173,9 +114,9 @@ app.audio = (function() {
         //Stop the currently playing audio
         stopAudio();
         //If the sourceNode already has a defined buffer, re-create it
-        if (nodes.sourceNode.buffer) {
-            nodes.sourceNode = audioCtx.createBufferSource();
-            nodes.sourceNode.connect(nodes.sourceNodeOutput);
+        if (sa.nodes.sourceNode.buffer) {
+            sa.nodes.sourceNode = sa.audioCtx.createBufferSource();
+            sa.nodes.sourceNode.connect(sa.nodes.sourceNodeOutput);
         }
 
         //Return a promise that resolves when the audio has loaded
@@ -183,18 +124,18 @@ app.audio = (function() {
             //Local function that sets the current song, starts the buffer, and resolves the promise
             let startTheBuffer = function() {
                 //Set the current song
-                currentSong = id;
+                sa.currentSong = id;
                 //Point the sourceNode to the audio buffer
-                nodes.sourceNode.buffer = songs[id].buffer;
+                sa.nodes.sourceNode.buffer = sa.songs[id].buffer;
                 //Start the audio
                 startAudio();
                 resolve();
             }
             //If the buffer is an ArrayBuffer, decode it into an AudioBuffer
-            if (songs[id].buffer instanceof ArrayBuffer) {
-                audioCtx.decodeAudioData(songs[id].buffer, function(decodedBuffer) {
+            if (sa.songs[id].buffer instanceof ArrayBuffer) {
+                sa.audioCtx.decodeAudioData(sa.songs[id].buffer, function(decodedBuffer) {
                     //Set the song buffer
-                    songs[id].buffer = decodedBuffer;
+                    sa.songs[id].buffer = decodedBuffer;
                     //Start the buffer
                     startTheBuffer();
                 }, reject);
@@ -212,7 +153,7 @@ app.audio = (function() {
      */
     function seekToPercent(percent) {
         //Prevent seeking if there is no song loaded
-        if (!nodes.sourceNode || !nodes.sourceNode.buffer)
+        if (!sa.nodes.sourceNode || !sa.nodes.sourceNode.buffer)
             return;
 
         //Get the song length
@@ -229,38 +170,38 @@ app.audio = (function() {
      */
     function seekToTime(time) {
         //Prevent seeking if there is no song loaded
-        if (!nodes.sourceNode || !nodes.sourceNode.buffer)
+        if (!sa.nodes.sourceNode || !sa.nodes.sourceNode.buffer)
             return;
 
         //Clamp the time to the length of the buffer
         time = app.utils.clamp(time, 0.0, getAudioLength());
         //Create a new buffer source and connect it, copying the old buffer
-        let newSource = audioCtx.createBufferSource();
-        newSource.buffer = nodes.sourceNode.buffer;
-        newSource.connect(nodes.sourceNodeOutput);
+        let newSource = sa.audioCtx.createBufferSource();
+        newSource.buffer = sa.nodes.sourceNode.buffer;
+        newSource.connect(sa.nodes.sourceNodeOutput);
         //Store the pause state before stopping the buffer.
-        let savePausedState = paused;
+        let savePausedState = sa.paused;
         //Stop the current source
         stopAudio();
         //Add the new source and start it at the inputted timestamp
-        nodes.sourceNode = newSource;
-        nodes.sourceNode.start(0, time);
+        sa.nodes.sourceNode = newSource;
+        sa.nodes.sourceNode.start(0, time);
         //Change the manually-tracked timestamp variables to match the updated song time
-        audioTimestamp = time;
+        sa.audioTimestamp = time;
         if (savePausedState) {
             pauseAudio();
         } else {
             playAudio();
         }
-        nodes.sourceNode.playbackRate.value = playbackSpeed;
+        sa.nodes.sourceNode.playbackRate.value = sa.playbackSpeed;
     }
 
     /**
      * Get the length (in seconds) of the current audio buffer
      */
     function getAudioLength() {
-        if (nodes.sourceNode && nodes.sourceNode.buffer) {
-            return nodes.sourceNode.buffer.duration;
+        if (sa.nodes.sourceNode && sa.nodes.sourceNode.buffer) {
+            return sa.nodes.sourceNode.buffer.duration;
         }
         return -1;
     }
@@ -269,8 +210,8 @@ app.audio = (function() {
      * Resume the audio context
      */
     function playAudio() {
-        audioCtx.resume().then(function() {
-            paused = false;
+        sa.audioCtx.resume().then(function() {
+            sa.paused = false;
             return;
         });
     }
@@ -279,8 +220,8 @@ app.audio = (function() {
      * Pause the audio context
      */
     function pauseAudio() {
-        audioCtx.suspend().then(function() {
-            paused = true;
+        sa.audioCtx.suspend().then(function() {
+            sa.paused = true;
             return;
         });
     }
@@ -289,18 +230,18 @@ app.audio = (function() {
      * Set the audio playback speed
      */
     function setPlaybackSpeed(multiplier) {
-        playbackSpeed = multiplier;
-        nodes.sourceNode.playbackRate.value = playbackSpeed;
+        sa.playbackSpeed = multiplier;
+        sa.nodes.sourceNode.playbackRate.value = sa.playbackSpeed;
     }
 
     /**
      * Update the member variables of the audio analyser to change the bounds of its output
      */
-    function updateAudioAnalyser(fftSize = NUM_SAMPLES, smoothingTimeConstant = 0.8, minDecibels = -100, maxDecibels = 50) {
-        nodes.analyserNode.fftSize = fftSize;
-        nodes.analyserNode.smoothingTimeConstant = smoothingTimeConstant;
-        nodes.analyserNode.minDecibels = minDecibels;
-        nodes.analyserNode.maxDecibels = maxDecibels;
+    function updateAudioAnalyser(fftSize = s.e.DEFAULT_NUM_SAMPLES, smoothingTimeConstant = 0.8, minDecibels = -100, maxDecibels = 50) {
+        sa.nodes.analyserNode.fftSize = fftSize;
+        sa.nodes.analyserNode.smoothingTimeConstant = smoothingTimeConstant;
+        sa.nodes.analyserNode.minDecibels = minDecibels;
+        sa.nodes.analyserNode.maxDecibels = maxDecibels;
     }
 
     /**
@@ -308,11 +249,11 @@ app.audio = (function() {
      * This function is private
      */
     function startAudio() {
-        if (nodes.sourceNode.buffer) {
-            nodes.sourceNode.start();
-            audioTimestamp = 0.0;
-            paused = false;
-            nodes.sourceNode.playbackRate.value = playbackSpeed;
+        if (sa.nodes.sourceNode.buffer) {
+            sa.nodes.sourceNode.start();
+            sa.audioTimestamp = 0.0;
+            sa.paused = false;
+            sa.nodes.sourceNode.playbackRate.value = sa.playbackSpeed;
         }
     }
 
@@ -321,9 +262,9 @@ app.audio = (function() {
      * This function is private
      */
     function stopAudio() {
-        if (nodes.sourceNode.buffer) {
-            nodes.sourceNode.stop();
-            paused = true;
+        if (sa.nodes.sourceNode.buffer) {
+            sa.nodes.sourceNode.stop();
+            sa.paused = true;
         }
     }
 
@@ -334,20 +275,20 @@ app.audio = (function() {
     function getSongId(searchString) {
         let upper = searchString.toUpperCase();
         //First, lookup by name
-        for (var i = 0; i < songs.length; i++) {
-            let thisSongName = songs[i].name.toUpperCase();
+        for (var i = 0; i < sa.songs.length; i++) {
+            let thisSongName = sa.songs[i].name.toUpperCase();
             if (thisSongName === upper)
                 return i;
             }
         //Second, lookup by artist
-        for (var i = 0; i < songs.length; i++) {
-            let thisSongArtist = songs[i].artist.toUpperCase();
+        for (var i = 0; i < sa.songs.length; i++) {
+            let thisSongArtist = sa.songs[i].artist.toUpperCase();
             if (thisSongArtist === upper)
                 return i;
             }
         //Last, lookup by album
-        for (let i = 0; i < songs.length; i++) {
-            let thisSongAlbum = songs[i].album.toUpperCase();
+        for (let i = 0; i < sa.songs.length; i++) {
+            let thisSongAlbum = sa.songs[i].album.toUpperCase();
             if (thisSongAlbum === upper)
                 return i;
             }
@@ -361,26 +302,26 @@ app.audio = (function() {
      */
     function createAudioContext() {
         //Create our audio context
-        audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+        sa.audioCtx = new(window.AudioContext || window.webkitAudioContext)();
         //Grab the audio source
-        nodes.sourceNode = audioCtx.createBufferSource();
+        sa.nodes.sourceNode = sa.audioCtx.createBufferSource();
         //Create a gain node (volume)
-        nodes.gainNode = audioCtx.createGain();
+        sa.nodes.gainNode = sa.audioCtx.createGain();
         //Create an analyser node (visualization)
-        nodes.analyserNode = audioCtx.createAnalyser();
+        sa.nodes.analyserNode = sa.audioCtx.createAnalyser();
 
         // fft stands for Fast Fourier Transform
-        nodes.analyserNode.fftSize = NUM_SAMPLES;
+        sa.nodes.analyserNode.fftSize = s.e.DEFAULT_NUM_SAMPLES;
 
         //Store the source node's output node for when we create new source nodes later
-        nodes.sourceNodeOutput = nodes.gainNode;
+        sa.nodes.sourceNodeOutput = sa.nodes.gainNode;
 
         //Hook things up in the right order
         //NOTE: This order is constant
         // source -> gain -> analyser -> output
-        nodes.sourceNode.connect(nodes.sourceNodeOutput);
-        nodes.gainNode.connect(nodes.analyserNode);
-        nodes.analyserNode.connect(audioCtx.destination);
+        sa.nodes.sourceNode.connect(sa.nodes.sourceNodeOutput);
+        sa.nodes.gainNode.connect(sa.nodes.analyserNode);
+        sa.nodes.analyserNode.connect(sa.audioCtx.destination);
     }
 
     /**
@@ -391,22 +332,22 @@ app.audio = (function() {
     function loadAudio(id, successCallback, failureCallback) {
         //Create a GET request for the audio buffer
         var request = new XMLHttpRequest();
-        request.open('GET', songs[id].filepath, true);
+        request.open('GET', sa.songs[id].filepath, true);
         request.responseType = 'arraybuffer';
         //When it loads, call an anonymous function
         request.onload = function() {
             //Decode the data with the pre-existing audio context
-            audioCtx.decodeAudioData(request.response, function(buffer) {
+            sa.audioCtx.decodeAudioData(request.response, function(buffer) {
                 //If there is already a source node, create another
-                if (nodes.sourceNode.buffer) {
-                    nodes.sourceNode = audioCtx.createBufferSource();
-                    nodes.sourceNode.connect(nodes.sourceNodeOutput);
+                if (sa.nodes.sourceNode.buffer) {
+                    sa.nodes.sourceNode = sa.audioCtx.createBufferSource();
+                    sa.nodes.sourceNode.connect(sa.nodes.sourceNodeOutput);
                 }
                 //Pass this buffer data into the audio source node
-                nodes.sourceNode.buffer = buffer;
+                sa.nodes.sourceNode.buffer = buffer;
                 //Set the song buffer so we don't have to re-load it from the server
-                songs[id].hasBuffer = true;
-                songs[id].buffer = buffer;
+                sa.songs[id].hasBuffer = true;
+                sa.songs[id].buffer = buffer;
                 //Call the callback that was passed into the loadAudio function
                 successCallback();
                 //Call the failure callback
@@ -417,9 +358,6 @@ app.audio = (function() {
     }
 
     return {
-        audioCtx: audioCtx,
-        songs: songs,
-        nodes: nodes,
         init: init,
         update: update,
         play: playAudio,
@@ -431,23 +369,11 @@ app.audio = (function() {
         playNewAudio: playNewAudio,
         updateAudioAnalyser: updateAudioAnalyser,
         playFromBuffer: playFromBuffer,
-        paused: function() {
-            return paused;
-        },
-        currentSong: function() {
-            return currentSong;
-        },
-        data: function() {
-            return data;
-        },
         getDataMax: function() {
-            return usingWaveform ? 255 : floatDataMaxValue;
+            return sa.usingWaveform ? 255 : Math.pow(255, sa.exponentScale);
         },
         getDataLength: function() {
-            return nodes.analyserNode.fftSize/4;
-        },
-        getAudioTimestamp: function() {
-            return audioTimestamp;
+            return sa.nodes.analyserNode.fftSize/4;
         }
     }
 }());

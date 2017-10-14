@@ -2,18 +2,6 @@
 
 app.drawing = (function() {
     let a = app;
-    let scrubAngle;
-    let scrubX = 0,
-        scrubY = 0;
-    let scrubbing = false;
-
-    function getGradient(x1, y1, x2, y2, colorStops) {
-        let grad = a.ctx.createLinearGradient(x1, y1, x2, y2);
-        for (let i = 0; i < colorStops; i++) {
-            grad.addColorStop(colorStops[i][0], colorStops[i][1]);
-        }
-        return grad;
-    }
 
     function drawCircle(x, y, rad, color) {
         let c = app.ctx;
@@ -26,7 +14,7 @@ app.drawing = (function() {
         c.restore();
     }
 
-    function drawAudioCircle(x, y, radius, data) {
+    function drawAudioCircle(x, y, radius, data, color) {
         let c = app.ctx;
         //Normalize the data array and map it into the range we want the values to fall between
         let mappedData = new Array(data.length);
@@ -35,7 +23,7 @@ app.drawing = (function() {
         }
 
         //Set up canvas variables
-        c.strokeStyle = "rgba(200, 200, 200, 1.0)";
+        c.strokeStyle = color;
         c.lineWidth = 2;
         c.beginPath();
         let r1 = radius - (mappedData[mappedData.length - 1] + mappedData[0] + mappedData[1]) / 3;
@@ -47,7 +35,7 @@ app.drawing = (function() {
         let theta = -Math.PI / 2 + increment;
         //Loop through all the data and draw it
         for (let i = 1; i < mappedData.length; i++) {
-            //Get three Visualiser data values
+            //Get three visualizer data values
             let d0 = mappedData[i - 1];
             let d1 = mappedData[i];
             let d2 = mappedData[(i + 1) % mappedData.length];
@@ -90,5 +78,9 @@ app.drawing = (function() {
         c.restore();
     }
 
-    return {drawCircle: drawCircle, getGradient: getGradient, drawAudioBar: drawAudioBar, drawAudioCircle: drawAudioCircle};
+    return {
+        drawCircle: drawCircle,
+        drawAudioBar: drawAudioBar,
+        drawAudioCircle: drawAudioCircle
+    };
 }());
