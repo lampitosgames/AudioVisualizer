@@ -29,6 +29,13 @@ app.main = (function() {
                 a.audio.pause();
             }
         });
+        a.keys.keyUp("g", function() {
+            if (graphType === DRAW_LINE) {
+                graphType = DRAW_BEZIER;
+            } else if (graphType === DRAW_BEZIER) {
+                graphType = DRAW_LINE;
+            }
+        })
 
         //Start the update loop.
         update();
