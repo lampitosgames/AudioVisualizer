@@ -26,7 +26,10 @@ app.scrubber = (function() {
     function update() {
         //Grab variables from state
         let radius = ss.radius;
-        let center = ss.center;
+        let center = ss.center = [
+            a.viewport.width/2 + ss.parallax[0],
+            a.viewport.height/2 + ss.parallax[1]
+        ];
 
         //draw the circle's shadow by layering very transparent circles in a line
         for (let i = Math.floor(radius / 2); i > 0; i -= 3) {

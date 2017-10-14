@@ -21,6 +21,7 @@ app.state = (function() {
 
     //Main module state
     let main = {
+        parallax: [0, 0],
         //Type of audio vis to draw
         graphType: e.DRAW_LINE,
         //Array of bezier curves for audio visualization
@@ -95,6 +96,7 @@ app.state = (function() {
 
     //Scrubber module state
     let scrubber = {
+        parallax: [0, 0],
         //Position of the pull tab
         scrubX: 0,
         scrubY: 0,
