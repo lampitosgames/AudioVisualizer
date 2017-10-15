@@ -14,6 +14,7 @@
     <script type="text/javascript" src="./js/drawing/bezier.js"></script>
     <script type="text/javascript" src="./js/ui/keybinds.js"></script>
     <script type="text/javascript" src="./js/ui/scrubber.js"></script>
+    <script type="text/javascript" src="./js/ui/parallax.js"></script>
     <script type="text/javascript" src="./js/audio.js"></script>
     <script type="text/javascript" src="./js/state.js"></script>
     <script type="text/javascript" src="./js/main.js"></script>
@@ -21,7 +22,20 @@
 
 <body>
     <canvas id="canvas"></canvas>
-    <input id="uploader" type="file" />
+    <div id="controlsHover">
+        <div id="controlsWrapper">
+            Hover for controls
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+
+
+            <input id="uploader" class="controlBlock" type="file" />
+        </div>
+    </div>
 </body>
 
 </html>

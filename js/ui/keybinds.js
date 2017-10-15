@@ -3,16 +3,18 @@
 //Sets up all keyboard commands for the app
 app.keybinds = (function() {
     let a = app;
-    let s, sm, sa, ss;
+    let s, sm, sa, ss, sp;
     function init() {
         //Get shorthand state variables
         s = a.state;
         sm = s.main;
         sa = s.audio;
         ss = s.scrubber;
+        sp = s.parallax;
 
         a.keys.keyUp("g", toggleBezierCurveDisplay);
         a.keys.keyUp("w", toggleWaveform);
+        a.keys.keyUp("p", toggleParallax);
         a.keys.keyUp("space", pausePlay);
         a.keys.keyUp("left", previousSong);
         a.keys.keyDown("left", fastBackward);
@@ -32,6 +34,13 @@ app.keybinds = (function() {
 
     function toggleWaveform() {
         sa.usingWaveform = !sa.usingWaveform;
+    }
+
+    function toggleParallax() {
+        sp.enabled = !sp.enabled;
+        sp.mainParallax = [0, 0];
+        sp.scrubberParallax = [0, 0];
+        sp.scrubberShadow = [0.5, 0.5];
     }
 
     function pausePlay() {

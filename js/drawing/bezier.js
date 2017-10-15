@@ -105,7 +105,7 @@ app.bezier = (function() {
         if (!data) return;
         let c = app.ctx;
         //For every position on the curve
-        for (let n=0; n<curve.length; n++) {
+        for (let n=1; n<curve.length; n++) {
             //Save and restore the canvas state so any canvas rotations get undone
             c.save();
             //Translate the canvas to the current point on the curve

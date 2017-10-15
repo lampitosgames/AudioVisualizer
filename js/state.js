@@ -108,6 +108,16 @@ app.state = (function() {
         lineWidth: e.DEFAULT_LINE_WIDTH
     };
 
+    //Parallax module state
+    let parallax = {
+        enabled: false,
+        mainParallax: [0, 0],
+        mainScale: -0.03,
+        scrubberParallax: [0, 0],
+        scrubberScale: 0.03,
+        scrubberShadow: [0.5, 0.5]
+    }
+
     //Time module state
     let time = {
         //Delta time
@@ -186,6 +196,7 @@ app.state = (function() {
         main: main,
         audio: audio,
         scrubber: scrubber,
+        parallax: parallax,
         time: time,
         color: color
     };
