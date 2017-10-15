@@ -21,7 +21,6 @@ app.state = (function() {
 
     //Main module state
     let main = {
-        parallax: [0, 0],
         //Type of audio vis to draw
         graphType: e.DRAW_LINE,
         //Array of bezier curves for audio visualization
@@ -96,7 +95,6 @@ app.state = (function() {
 
     //Scrubber module state
     let scrubber = {
-        parallax: [0, 0],
         //Position of the pull tab
         scrubX: 0,
         scrubY: 0,
@@ -109,6 +107,16 @@ app.state = (function() {
         //Width of the scrubber line (animate on mouseover)
         lineWidth: e.DEFAULT_LINE_WIDTH
     };
+
+    //Parallax module state
+    let parallax = {
+        enabled: false,
+        mainParallax: [0, 0],
+        mainScale: -0.03,
+        scrubberParallax: [0, 0],
+        scrubberScale: 0.03,
+        scrubberShadow: [0.5, 0.5]
+    }
 
     //Time module state
     let time = {
@@ -188,6 +196,7 @@ app.state = (function() {
         main: main,
         audio: audio,
         scrubber: scrubber,
+        parallax: parallax,
         time: time,
         color: color
     };

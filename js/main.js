@@ -7,7 +7,7 @@ app.ctx = undefined;
 //Define main module
 app.main = (function() {
     let a = app;
-    let s, sm, sc;
+    let s, sm, sc, sp;
 
     /**
      * Init the main module.  Setup the canvas.  Call the initial resize and update
@@ -18,6 +18,7 @@ app.main = (function() {
         s = a.state;
         sm = s.main;
         sc = s.color;
+        sp = s.parallax;
         //Init canvas
         a.canvas = document.getElementById("canvas");
         //Bind resize, then call it as part of initialization
@@ -43,7 +44,7 @@ app.main = (function() {
         a.ctx.fillRect(0, 0, a.viewport.width, a.viewport.height);
 
         a.ctx.save();
-        a.ctx.translate(sm.parallax[0], sm.parallax[1]);
+        a.ctx.translate(sp.mainParallax[0], sp.mainParallax[1]);
 
         //Visualizer data
         let aData = s.audio.data;

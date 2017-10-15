@@ -7,10 +7,33 @@
 }
 
 #uploader {
-    top: 10px;
-    left: 10px;
-    z-index: 1;
+    width: 100%;
     padding: 10px;
     background-color: white;
+}
+
+#controlsHover {
     position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 20vw;
+    height: 30px;
+    z-index: 1;
+    overflow: hidden;
+
+    transition: height 250ms ease-in-out;
+}
+#controlsWrapper {
+    position: absolute;
+    top: calc(-100vh + 30px);
+    width: 100%;
+    height: 100vh;
+    z-index: 2;
+    transition: top 250ms ease-in-out;
+}
+#controlsHover:hover {
+    height: 100vh;
+}
+#controlsWrapper:hover {
+    top: 0;
 }
