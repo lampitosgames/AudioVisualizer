@@ -28,11 +28,31 @@ body {
     position: fixed;
     right: 0;
     bottom: 0;
-    width: 20vw;
-    height: 30px;
-    font-size: 16pt;
     z-index: 100;
-    font-family: Roboto;
+    height: 36px;
+    width: 25rem;
+    min-width: 88px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    border-radius: 2px;
+    background-color: red;
+    color:#fff;
+    cursor: pointer;
+    font-family: Roboto, Arial;
+    font-size: 16px;
+}
+#toggleControlsText {
+    position: absolute;
+    top: 16px;
+    left: 0px;
+    width: 100%;
+}
+#toggleControls:hover {
+    background-color: rgb(200, 0, 0);
 }
 
 #controlsHover {
