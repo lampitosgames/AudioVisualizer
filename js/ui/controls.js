@@ -3,8 +3,6 @@ app.controls = (function() {
     let a = app;
     let sc;
 
-    let $slider1;
-
     function init() {
         sc = a.state.controls;
         sc.$controlsHover = document.getElementById("controlsHover");
@@ -16,6 +14,19 @@ app.controls = (function() {
 
         document.getElementById("toggleControls").onclick = function() { a.keybinds.toggleControlsPanel(!sc.visible); };
 
+        //Sample count slider
+        sc.$sampleCountSlider = new app.Slider("sampleCountSlider", 10, 7, 12, 1);
+        sc.$sampleCountSlider.onchange = function(val) {
+            a.audio.updateAudioAnalyser(Math.pow(2, val));
+        }
+
+        //Logarithmic scale slider
+        sc.$logScaleSlider = new app.Slider("logScaleSlider", 8, 1, 10, 1);
+        sc.$logScaleSlider.onchange = function(val) {
+            a.state.audio.exponentScale = val;
+        }
+
+        //Playback speed slider
         sc.$playbackSpeedSlider = new app.Slider("playbackSpeedSlider", 1.0, 0.1, 3.0, 0.1);
         sc.$playbackSpeedSlider.onchange = a.audio.setPlaybackSpeed;
     }

@@ -36,6 +36,8 @@ app.state = (function() {
         $waveformCheckbox: undefined,
         $parallaxCheckbox: undefined,
         $playbackSpeedSlider: undefined,
+        $sampleCountSlider: undefined,
+        $logScaleSlider: undefined,
     }
 
     //Audio module state

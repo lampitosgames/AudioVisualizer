@@ -31,6 +31,22 @@
     <div id="controlsHover">
         <div id="controlsWrapper">
             <div class="subheader">Visualization</div>
+            <div class="sliderBox">
+                <div class="sliderLabel">Sample Count Multiplier</div>
+                <i class="material-icons sliderIcon">equalizer</i>
+                <div class="slider" id="sampleCountSlider">
+                    <div class="sliderFill"></div><div class="sliderHandle"></div>
+                </div>
+                <div class="sliderValue"></div>
+            </div>
+            <div class="sliderBox">
+                <div class="sliderLabel">Audio Logarithmic Scale</div>
+                <i class="material-icons sliderIcon">show_chart</i>
+                <div class="slider" id="logScaleSlider">
+                    <div class="sliderFill"></div><div class="sliderHandle"></div>
+                </div>
+                <div class="sliderValue"></div>
+            </div>
             <ul class="list">
                 <li class="listItem">
                     <label class="checkboxLabel">
@@ -50,12 +66,6 @@
                         Enable Parallax
                     </label>
                 </li>
-                <li class="listItem">
-                    <label class="checkboxLabel">
-                        <input type="checkbox" class="checkbox"/>
-                        Single-line item
-                    </label>
-                </li>
             </ul>
             <div class="subheader">Audio</div>
             <div class="sliderBox">
@@ -66,7 +76,27 @@
                 </div>
                 <div class="sliderValue"></div>
             </div>
-            <input id="uploader" class="controlBlock" type="file" />
+            <div class="dropdown">Select Song
+                <i class="material-icons dropdownArrow">arrow_drop_down</i>
+                <ul class="dropdownPopout">
+                    <li class="dropdownItem">
+                        No Vacancy
+                    </li>
+                    <li class="dropdownItem dropdownActive">
+                        Firewall
+                    </li>
+                    <li class="dropdownItem">
+                        Dark Matter
+                    </li>
+                    <li class="dropdownItem">
+                        Devastation and Reform
+                    </li>
+                </ul>
+            </div>
+            <div class="upload">
+                <span class="uploadText">Upload Song</span>
+                <input id="uploader" class="controlBlock" type="file" />
+            </div>
         </div>
     </div>
 </body>
