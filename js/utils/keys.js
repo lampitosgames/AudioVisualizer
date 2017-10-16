@@ -53,8 +53,8 @@ app.keys = (function() {
         window.addEventListener("mousemove", function(e) {
             //Get the mouse position
             mouse = [
-                e.pageX - e.target.offsetLeft,
-                e.pageY - e.target.offsetTop
+                e.clientX,
+                e.clientY
             ];
         });
     }

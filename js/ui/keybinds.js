@@ -3,15 +3,18 @@
 //Sets up all keyboard commands for the app
 app.keybinds = (function() {
     let a = app;
-    let s, sm, sa, ss, sp;
+    let s, sm, sc, sa, ss, sp;
     function init() {
         //Get shorthand state variables
         s = a.state;
         sm = s.main;
+        sc = s.controls;
         sa = s.audio;
         ss = s.scrubber;
         sp = s.parallax;
 
+        a.keys.keyUp("c", function() { toggleControlsPanel(!sc.visible); });
+        a.keys.keyUp("esc", function() { toggleControlsPanel(false); });
         a.keys.keyUp("g", toggleBezierCurveDisplay);
         a.keys.keyUp("w", toggleWaveform);
         a.keys.keyUp("p", toggleParallax);
@@ -24,16 +27,32 @@ app.keybinds = (function() {
         a.keys.keyDown("down", decreaseVolume);
     }
 
+    function toggleControlsPanel(visible) {
+        if (!visible) {
+            sc.visible = false;
+            sc.$controlsHover.style.height = "0vh";
+            sc.$controlsWrapper.style.top = "-100vh";
+        } else {
+            sc.visible = true;
+            sc.$controlsHover.style.height = "100vh";
+            sc.$controlsWrapper.style.top = "0";
+        }
+    }
+
     function toggleBezierCurveDisplay() {
+        console.dir(sc.$bezierCheckbox);
         if (sm.graphType === s.e.DRAW_LINE) {
             sm.graphType = s.e.DRAW_BEZIER;
+            sc.$bezierCheckbox.checked = true;
         } else if (sm.graphType === s.e.DRAW_BEZIER) {
             sm.graphType = s.e.DRAW_LINE;
+            sc.$bezierCheckbox.checked = false;
         }
     }
 
     function toggleWaveform() {
         sa.usingWaveform = !sa.usingWaveform;
+        sc.$waveformCheckbox.checked = sa.usingWaveform;
     }
 
     function toggleParallax() {
@@ -41,6 +60,7 @@ app.keybinds = (function() {
         sp.mainParallax = [0, 0];
         sp.scrubberParallax = [0, 0];
         sp.scrubberShadow = [0.5, 0.5];
+        sc.$parallaxCheckbox.checked = sp.enabled;
     }
 
     function pausePlay() {
@@ -101,6 +121,10 @@ app.keybinds = (function() {
     }
 
     return {
-        init: init
+        init: init,
+        toggleControlsPanel: toggleControlsPanel,
+        toggleBezierCurveDisplay: toggleBezierCurveDisplay,
+        toggleWaveform: toggleWaveform,
+        toggleParallax: toggleParallax
     }
 }());

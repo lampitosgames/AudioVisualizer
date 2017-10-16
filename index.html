@@ -28,27 +28,27 @@
     </div>
     <div id="controlsHover">
         <div id="controlsWrapper">
-            <input id="uploader" class="controlBlock" type="file" />
+            <br/>
             <div class="subheader">
                 Visualization
             </div>
             <ul class="list">
                 <li class="listItem">
                     <label class="checkboxLabel">
-                        <input type="checkbox" class="checkbox" checked />
-                        Single-line item
+                        <input type="checkbox" id="bezierEnabled" class="checkbox" />
+                        Enable Bezier Visualization
                     </label>
                 </li>
                 <li class="listItem">
                     <label class="checkboxLabel">
-                        <input type="checkbox" class="checkbox"/>
-                        Single-line item
+                        <input type="checkbox" id="waveformEnabled" class="checkbox"/>
+                        Use Waveform Data
                     </label>
                 </li>
                 <li class="listItem">
                     <label class="checkboxLabel">
-                        <input type="checkbox" class="checkbox"/>
-                        Single-line item
+                        <input type="checkbox" id="parallaxEnabled" class="checkbox"/>
+                        Enable Parallax
                     </label>
                 </li>
                 <li class="listItem">
@@ -58,6 +58,7 @@
                     </label>
                 </li>
             </ul>
+            <input id="uploader" class="controlBlock" type="file" />
         </div>
     </div>
 </body>

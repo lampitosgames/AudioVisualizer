@@ -1,28 +1,27 @@
 
 app.controls = (function() {
-    let controlsVisible = false;
+    let a = app;
+    let sc;
 
-    let $controlsHover,
-        $controlsWrapper;
     function init() {
-        $controlsHover = document.getElementById("controlsHover");
-        $controlsWrapper = document.getElementById("controlsWrapper");
+        sc = a.state.controls;
+        sc.$controlsHover = document.getElementById("controlsHover");
+        sc.$controlsWrapper = document.getElementById("controlsWrapper");
 
-        document.getElementById("toggleControls").onclick = function() {
-            if (controlsVisible) {
-                controlsVisible = false;
-                $controlsHover.style.height = "0vh";
-                $controlsWrapper.style.top = "-100vh";
-            } else {
-                controlsVisible = true;
-                $controlsHover.style.height = "100vh";
-                $controlsWrapper.style.top = "0";
-            }
-        }
+        bindCheckbox("$bezierCheckbox", "bezierEnabled", a.keybinds.toggleBezierCurveDisplay);
+        bindCheckbox("$waveformCheckbox", "waveformEnabled", a.keybinds.toggleWaveform);
+        bindCheckbox("$parallaxCheckbox", "parallaxEnabled", a.keybinds.toggleParallax);
+
+        document.getElementById("toggleControls").onclick = function() { a.keybinds.toggleControlsPanel(!sc.visible); };
+    }
+
+    function bindCheckbox(stateVariable, checkboxId, func) {
+        sc[stateVariable] = document.getElementById(checkboxId);
+        sc[stateVariable].addEventListener("change", func);
     }
 
 
     return {
-        init
+        init: init
     }
 }());

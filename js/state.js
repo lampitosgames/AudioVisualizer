@@ -28,6 +28,15 @@ app.state = (function() {
         animationID: 0
     };
 
+    let controls = {
+        visible: false,
+        $controlsHover: undefined,
+        $controlsWrapper: undefined,
+        $bezierCheckbox: undefined,
+        $waveformCheckbox: undefined,
+        $parallaxCheckbox: undefined,
+    }
+
     //Audio module state
     let audio = {
         //Audio context
@@ -194,6 +203,7 @@ app.state = (function() {
     return {
         e: e,
         main: main,
+        controls: controls,
         audio: audio,
         scrubber: scrubber,
         parallax: parallax,

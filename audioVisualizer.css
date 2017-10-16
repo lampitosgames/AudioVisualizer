@@ -50,8 +50,13 @@ body {
     width: 20rem;
     height: 100vh;
     z-index: 2;
-    padding: 1rem;
     transition: top 250ms ease-in-out;
+}
+
+.divider {
+    height: 1px;
+    width: 100%;
+    background-color: rgb(200, 200, 200);
 }
 
 .subheader {
@@ -64,10 +69,12 @@ body {
 
 .list {
     list-style: none;
-    padding: 0;
+    margin: 0;
+    padding: 0 0 0 1.5rem;
 }
 
 .listItem {
+    margin-top: 0.5rem;
     margin-bottom: 1rem;
     padding: 0;
 }
@@ -75,7 +82,8 @@ body {
 .checkboxLabel {
     position: relative;
     font-family: Roboto;
-    font-size: 12pt;
+    font-size: 14px;
+    color: rgb(118, 118, 118);
     cursor: pointer;
 }
 .checkbox {
@@ -87,7 +95,6 @@ body {
     transition: all 300ms ease-in-out;
     content: "";
     position: absolute;
-    top: -0.1rem;
     left: 0;
     width: 0.8rem;
     height: 0.8rem;
