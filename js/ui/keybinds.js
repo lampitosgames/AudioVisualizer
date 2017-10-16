@@ -40,7 +40,6 @@ app.keybinds = (function() {
     }
 
     function toggleBezierCurveDisplay() {
-        console.dir(sc.$bezierCheckbox);
         if (sm.graphType === s.e.DRAW_LINE) {
             sm.graphType = s.e.DRAW_BEZIER;
             sc.$bezierCheckbox.checked = true;

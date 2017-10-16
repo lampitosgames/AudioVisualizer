@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Audio Visualizer - Daniel Timko</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="audioVisualizer.css" />
     <script type="text/javascript" src="./js/loader.js"></script>
     <script type="text/javascript" src="./js/utils/utils.js"></script>
@@ -16,6 +17,7 @@
     <script type="text/javascript" src="./js/ui/scrubber.js"></script>
     <script type="text/javascript" src="./js/ui/parallax.js"></script>
     <script type="text/javascript" src="./js/ui/controls.js"></script>
+    <script type="text/javascript" src="./js/ui/slider.js"></script>
     <script type="text/javascript" src="./js/audio.js"></script>
     <script type="text/javascript" src="./js/state.js"></script>
     <script type="text/javascript" src="./js/main.js"></script>
@@ -28,10 +30,7 @@
     </div>
     <div id="controlsHover">
         <div id="controlsWrapper">
-            <br/>
-            <div class="subheader">
-                Visualization
-            </div>
+            <div class="subheader">Visualization</div>
             <ul class="list">
                 <li class="listItem">
                     <label class="checkboxLabel">
@@ -58,11 +57,14 @@
                     </label>
                 </li>
             </ul>
-            <div class="slider">
-                <div class="sliderFill">
+            <div class="subheader">Audio</div>
+            <div class="sliderBox">
+                <div class="sliderLabel">Playback Speed</div>
+                <i class="material-icons sliderIcon">fast_forward</i>
+                <div class="slider" id="playbackSpeedSlider">
+                    <div class="sliderFill"></div><div class="sliderHandle"></div>
                 </div>
-                <div class="sliderHandle">
-                </div>
+                <div class="sliderValue"></div>
             </div>
             <input id="uploader" class="controlBlock" type="file" />
         </div>
