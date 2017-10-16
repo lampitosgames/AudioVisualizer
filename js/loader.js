@@ -14,6 +14,7 @@ window.onload = function() {
     app.file.init();
     app.scrubber.init();
     app.keybinds.init();
+    app.controls.init();
 
     //Initialize main
     app.main.init();

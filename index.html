@@ -15,6 +15,7 @@
     <script type="text/javascript" src="./js/ui/keybinds.js"></script>
     <script type="text/javascript" src="./js/ui/scrubber.js"></script>
     <script type="text/javascript" src="./js/ui/parallax.js"></script>
+    <script type="text/javascript" src="./js/ui/controls.js"></script>
     <script type="text/javascript" src="./js/audio.js"></script>
     <script type="text/javascript" src="./js/state.js"></script>
     <script type="text/javascript" src="./js/main.js"></script>
@@ -22,18 +23,41 @@
 
 <body>
     <canvas id="canvas"></canvas>
+    <div id="toggleControls">
+        Show Controls
+    </div>
     <div id="controlsHover">
         <div id="controlsWrapper">
-            Hover for controls
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-
-
             <input id="uploader" class="controlBlock" type="file" />
+            <div class="subheader">
+                Visualization
+            </div>
+            <ul class="list">
+                <li class="listItem">
+                    <label class="checkboxLabel">
+                        <input type="checkbox" class="checkbox" checked />
+                        Single-line item
+                    </label>
+                </li>
+                <li class="listItem">
+                    <label class="checkboxLabel">
+                        <input type="checkbox" class="checkbox"/>
+                        Single-line item
+                    </label>
+                </li>
+                <li class="listItem">
+                    <label class="checkboxLabel">
+                        <input type="checkbox" class="checkbox"/>
+                        Single-line item
+                    </label>
+                </li>
+                <li class="listItem">
+                    <label class="checkboxLabel">
+                        <input type="checkbox" class="checkbox"/>
+                        Single-line item
+                    </label>
+                </li>
+            </ul>
         </div>
     </div>
 </body>
