@@ -30,14 +30,19 @@ app.state = (function() {
 
     let controls = {
         visible: false,
+        //Controls wrapper elements
         $controlsHover: undefined,
         $controlsWrapper: undefined,
+        //Checkboxes
         $bezierCheckbox: undefined,
         $waveformCheckbox: undefined,
         $parallaxCheckbox: undefined,
+        //Sliders
         $playbackSpeedSlider: undefined,
         $sampleCountSlider: undefined,
         $logScaleSlider: undefined,
+        //Dropdowns
+        $selectSongDropdown: undefined,
     }
 
     //Audio module state

@@ -40,10 +40,7 @@ app.audio = (function() {
 
         //Check if the current song is done playing.  If it is, go to the next one.
         if (getAudioLength() != -1 && sa.audioTimestamp > getAudioLength()) {
-            newAudioPromise = playNewAudio((sa.currentSong + 1) % sa.songs.length);
-            newAudioPromise.then(function() {
-                newAudioPromise = undefined;
-            });
+            playNewAudio((sa.currentSong + 1) % sa.songs.length);
             return;
         }
 
@@ -76,6 +73,10 @@ app.audio = (function() {
      * Returns a promise that resolves when the audio is loaded
      */
     function playNewAudio(id) {
+        //If a promise is waiting to be resolved (new song loading), do nothing
+        if (newAudioPromise != undefined)
+            return;
+
         //Check if a search term was passed in place of an index
         if (typeof id === 'string')
             id = getSongId(id);
@@ -92,12 +93,13 @@ app.audio = (function() {
         //If there is already a buffer loaded for this song, don't load another
         if (sa.songs[id].hasBuffer) {
             //Play from the already-loaded buffer, returning a promise
-            return playFromBuffer(id, savePausedState);
+            playFromBuffer(id, savePausedState);
+            return;
         }
 
         //Asyncronously load a new song into the audio context
-        //Return a promise that resolves when the audio loads successfully
-        return new Promise(function(resolve, reject) {
+        //Store a promise that resolves when the audio loads successfully
+        newAudioPromise = new Promise(function(resolve, reject) {
             loadAudio(id, function() {
                 //Play the song
                 startAudio();
@@ -105,8 +107,12 @@ app.audio = (function() {
                 if (savePausedState) {
                     pauseAudio();
                 }
+                //Update the song select
+                s.controls.$selectSongDropdown.render();
                 resolve();
             }, reject);
+        }).then(function() {
+            newAudioPromise = undefined;
         });
     }
 
@@ -116,6 +122,9 @@ app.audio = (function() {
      * This function assumes that songs[id].buffer is defined as an ArrayBuffer or an AudioBuffer
      */
     function playFromBuffer(id, savePausedState = false) {
+        //If a promise is waiting to be resolved (new song loading), do nothing
+        if (newAudioPromise != undefined)
+            return;
         //Stop the currently playing audio
         stopAudio();
         //If the sourceNode already has a defined buffer, re-create it
@@ -124,8 +133,8 @@ app.audio = (function() {
             sa.nodes.sourceNode.connect(sa.nodes.sourceNodeOutput);
         }
 
-        //Return a promise that resolves when the audio has loaded
-        return new Promise(function(resolve, reject) {
+        //Store a promise that resolves when the audio has loaded
+        newAudioPromise = new Promise(function(resolve, reject) {
             //Local function that sets the current song, starts the buffer, and resolves the promise
             let startTheBuffer = function() {
                 //Set the current song
@@ -137,6 +146,8 @@ app.audio = (function() {
                 if (savePausedState) {
                     pauseAudio();
                 }
+                //Update the song select
+                s.controls.$selectSongDropdown.render();
                 resolve();
             }
             //If the buffer is an ArrayBuffer, decode it into an AudioBuffer
@@ -152,6 +163,8 @@ app.audio = (function() {
                 //Start the buffer
                 startTheBuffer();
             }
+        }).then(function() {
+            newAudioPromise = undefined;
         });
     }
 

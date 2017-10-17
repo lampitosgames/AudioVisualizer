@@ -29,6 +29,10 @@ app.controls = (function() {
         //Playback speed slider
         sc.$playbackSpeedSlider = new app.Slider("playbackSpeedSlider", 1.0, 0.1, 3.0, 0.1);
         sc.$playbackSpeedSlider.onchange = a.audio.setPlaybackSpeed;
+
+        //Select song dropdown
+        sc.$selectSongDropdown = new app.Dropdown("selectSongDropdown", a.state.audio.songs, function() { return a.state.audio.currentSong; });
+        sc.$selectSongDropdown.onchange = a.audio.playNewAudio;
     }
 
     function bindCheckbox(stateVariable, checkboxId, func) {
