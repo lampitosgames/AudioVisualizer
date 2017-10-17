@@ -41,6 +41,7 @@ app.state = (function() {
         $playbackSpeedSlider: undefined,
         $sampleCountSlider: undefined,
         $logScaleSlider: undefined,
+        $delaySlider: undefined,
         //Dropdowns
         $selectSongDropdown: undefined,
     }
@@ -92,6 +93,8 @@ app.state = (function() {
             sourceNodeOutput: undefined,
             sourceNode: undefined,
             gainNode: undefined,
+            convolverNode: undefined,
+            delayNode: undefined,
             analyserNode: undefined
         },
         //Visualizer data
@@ -149,62 +152,25 @@ app.state = (function() {
 
     //App-wide color constants
     let color = {
-        a_primaryColor: [
-            255, 0, 0, 1.0
-        ],
-        a_secondaryColor: [
-            200, 200, 200, 1.0
-        ],
-        a_backgroundColor: [
-            247, 247, 247, 1.0
-        ],
-        primaryColor: function() {
-            return this.getColor("a_primaryColor");
-        },
-        secondaryColor: function() {
-            return this.getColor("a_secondaryColor");
-        },
-        backgroundColor: function() {
-            return this.getColor("a_backgroundColor");
+        primaryColor: new app.Color(255, 0, 0, 1.0),
+        secondaryColor: new app.Color(200, 200, 200, 1.0),
+        //UI Colors
+        ui: {
+            backgroundColor: new app.Color(247, 247, 247, 1.0),
+            textHeaderColor: new app.Color(0, 0, 0, 1.0),
+            textBodyColor: new app.Color(118, 118, 118, 1.0),
+            textInvertedColor: new app.Color(255, 255, 255, 1.0),
+            buttonMouseOver: new app.Color(200, 0, 0, 1.0),
+            dropdownActiveColor: new app.Color(230, 230, 230, 1.0),
         },
 
         //Scrubber colors
         scrubber: {
-            a_scrubberColor: [
-                255, 0, 0, 1.0
-            ],
-            a_shadowColor: [
-                0, 0, 0, 0.01
-            ],
-            a_scrubBackgroundColor: [
-                0, 0, 0, 0.2
-            ],
-            a_gradientColor1: [
-                235, 235, 235, 1.0
-            ],
-            a_gradientColor2: [
-                255, 255, 255, 1.0
-            ],
-            scrubberColor: function() {
-                return color.getColor("a_scrubberColor", this);
-            },
-            shadowColor: function() {
-                return color.getColor("a_shadowColor", this);
-            },
-            scrubBackgroundColor: function() {
-                return color.getColor("a_scrubBackgroundColor", this);
-            },
-            gradientColor1: function() {
-                return color.getColor("a_gradientColor1", this);
-            },
-            gradientColor2: function() {
-                return color.getColor("a_gradientColor2", this);
-            }
-        },
-
-        //Helper function to turn arrays into colors
-        getColor: function(name, obj = this) {
-            return "rgba(" + obj[name][0] + ", " + obj[name][1] + ", " + obj[name][2] + ", " + obj[name][3] + ")"
+            scrubberColor: new app.Color(255, 0, 0, 1.0),
+            shadowColor: new app.Color(0, 0, 0, 0.01),
+            scrubBackgroundColor: new app.Color(0, 0, 0, 0.2),
+            gradientColor1: new app.Color(235, 235, 235, 1.0),
+            gradientColor2: new app.Color(255, 255, 255, 1.0),
         }
     };
 

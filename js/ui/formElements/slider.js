@@ -32,9 +32,9 @@ app.Slider = (function() {
 
         //Updates the color of the slider to colors in the state
         this.updateColor = function() {
-            this.$sliderFill.style.backgroundColor = app.state.color.primaryColor();
-            this.$sliderHandle.style.backgroundColor = app.state.color.primaryColor();
-            //TODO: Set other colors based on state
+            this.$sliderFill.style.backgroundColor = app.state.color.primaryColor.get();
+            this.$sliderHandle.style.backgroundColor = app.state.color.primaryColor.get();
+            this.$slider.style.backgroundColor = app.state.color.ui.textBodyColor.get();
         }
 
         //Bind mouse click
@@ -58,6 +58,9 @@ app.Slider = (function() {
         this.setCSS(this.value);
         //Init the slider color
         this.updateColor();
+        //Add a change listener to used colors
+        app.state.color.primaryColor.addListener(this.updateColor.bind(this));
+        app.state.color.ui.textBodyColor.addListener(this.updateColor.bind(this));
     }
 
     function mouseMove() {

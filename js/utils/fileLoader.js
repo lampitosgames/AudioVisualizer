@@ -40,10 +40,7 @@ app.file = (function() {
                 album: "Unknown"
             });
             //Play the song
-            app.audio.playFromBuffer(songId, app.state.audio.paused).then(function() {
-                //Update the dropdown
-                app.state.controls.$selectSongDropdown.render();
-            });
+            app.audio.playFromBuffer(songId, app.state.audio.paused);
         }
 
     }

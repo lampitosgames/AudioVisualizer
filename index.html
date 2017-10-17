@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="audioVisualizer.css" />
     <script type="text/javascript" src="./js/loader.js"></script>
     <script type="text/javascript" src="./js/utils/utils.js"></script>
+    <script type="text/javascript" src="./js/utils/color.js"></script>
     <script type="text/javascript" src="./js/utils/keys.js"></script>
     <script type="text/javascript" src="./js/utils/time.js"></script>
     <script type="text/javascript" src="./js/utils/fileLoader.js"></script>
@@ -26,9 +27,7 @@
 
 <body>
     <canvas id="canvas"></canvas>
-    <span id="toggleControls">
-        <span id="toggleControlsText">Show Controls</span>
-    </span>
+    <div class="button" id="toggleControls">Show Controls</div>
     <div id="controlsHover">
         <div id="controlsWrapper">
             <div class="subheader">Visualization</div>
@@ -68,7 +67,21 @@
                     </label>
                 </li>
             </ul>
+            <!-- <div class="dropdown" id="themeDropdown">Select Theme
+                <i class="material-icons">arrow_drop_down</i>
+                <ul class="dropdownPopout">
+                </ul>
+            </div> -->
+
             <div class="subheader">Audio</div>
+            <div class="sliderBox">
+                <div class="sliderLabel">Volume</div>
+                <i class="material-icons sliderIcon">volume_up</i>
+                <div class="slider" id="volumeSlider">
+                    <div class="sliderFill"></div><div class="sliderHandle"></div>
+                </div>
+                <div class="sliderValue"></div>
+            </div>
             <div class="sliderBox">
                 <div class="sliderLabel">Playback Speed</div>
                 <i class="material-icons sliderIcon">fast_forward</i>
@@ -77,13 +90,20 @@
                 </div>
                 <div class="sliderValue"></div>
             </div>
+            <div class="sliderBox">
+                <div class="sliderLabel">Delay</div>
+                <i class="material-icons sliderIcon">access_alarm</i>
+                <div class="slider" id="delaySlider">
+                    <div class="sliderFill"></div><div class="sliderHandle"></div>
+                </div>
+                <div class="sliderValue"></div>
+            </div>
             <div class="dropdown" id="selectSongDropdown">Select Song
-                <i class="material-icons dropdownArrow">arrow_drop_down</i>
+                <i class="material-icons">arrow_drop_down</i>
                 <ul class="dropdownPopout">
                 </ul>
             </div>
-            <div class="upload">
-                <span class="uploadText">Upload Song</span>
+            <div class="button uploadButton">Upload Song
                 <input id="uploader" class="controlBlock" type="file" />
             </div>
         </div>

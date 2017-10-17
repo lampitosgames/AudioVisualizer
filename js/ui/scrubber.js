@@ -34,12 +34,12 @@ app.scrubber = (function() {
 
         //draw the circle's shadow by layering very transparent circles in a line
         for (let i = Math.floor(radius * 0.5); i > 0; i -= 3) {
-            a.drawing.drawCircle(center[0] - sp.scrubberShadow[0]*i, center[1] + sp.scrubberShadow[1]*i, radius, scs.shadowColor());
+            a.drawing.drawCircle(center[0] - sp.scrubberShadow[0]*i, center[1] + sp.scrubberShadow[1]*i, radius, scs.shadowColor.get());
         }
         //Draw the main circle.  The gradient helps it stand out against the background
         let grad = a.ctx.createLinearGradient(center[0] + radius, center[1] - radius, center[0] - radius, center[1] + radius);
-        grad.addColorStop(0, scs.gradientColor1());
-        grad.addColorStop(1, scs.gradientColor2());
+        grad.addColorStop(0, scs.gradientColor1.get());
+        grad.addColorStop(1, scs.gradientColor2.get());
         a.drawing.drawCircle(center[0], center[1], radius, grad);
 
         //TODO: Use HTML for this instead of drawing on the canvas
@@ -48,14 +48,14 @@ app.scrubber = (function() {
         app.ctx.textBaseline = "middle";
         let songData = s.audio.songs[s.audio.currentSong];
         if (songData) {
-            a.drawing.drawText(songData.name, center[0], center[1] - 18, "bold 28pt Arial", sc.primaryColor());
-            a.drawing.drawText(songData.artist, center[0], center[1] + 20, "12pt Arial", sc.primaryColor());
+            a.drawing.drawText(songData.name, center[0], center[1] - 18, "bold 28pt Arial", sc.primaryColor.get());
+            a.drawing.drawText(songData.artist, center[0], center[1] + 20, "12pt Arial", sc.primaryColor.get());
         }
 
         //Grab the audio data
         let aData = s.audio.data;
         //Draw the visualized circle around the edge
-        a.drawing.drawAudioCircle(center[0], center[1], radius - 30, aData, sc.secondaryColor());
+        a.drawing.drawAudioCircle(center[0], center[1], radius - 30, aData, sc.secondaryColor.get());
         //Draw the audio scrubber.  It forms a circular ring around the background we just drew
         drawScrubber();
     }
@@ -94,21 +94,21 @@ app.scrubber = (function() {
         c.lineWidth = ss.lineWidth;
         //If we are scrubbing, draw a full, slightly-visible scrub track
         if (hover) {
-            c.strokeStyle = scs.scrubBackgroundColor();
+            c.strokeStyle = scs.scrubBackgroundColor.get();
             c.beginPath();
             c.arc(ss.center[0], ss.center[1], ss.radius, 0, Math.PI * 2);
             c.stroke();
         }
 
-        c.strokeStyle = scs.scrubberColor();
+        c.strokeStyle = scs.scrubberColor.get();
         c.beginPath();
         c.arc(ss.center[0], ss.center[1], ss.radius, -Math.PI / 2, ss.scrubAngle);
         c.stroke();
 
         //Draw the scrubber circle
         c.fillStyle = hover
-            ? scs.scrubberColor()
-            : scs.gradientColor2();
+            ? scs.scrubberColor.get()
+            : scs.gradientColor2.get();
         c.beginPath();
         c.arc(ss.scrubX, ss.scrubY, ss.smallRadius, 0, Math.PI * 2);
         c.fill();

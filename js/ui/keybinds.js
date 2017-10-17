@@ -103,11 +103,13 @@ app.keybinds = (function() {
 
     function increaseVolume() {
         if (a.keys.pressed("windows")) return;
-        if (sa.nodes.gainNode.gain.value + sa.volumeIncrement <= 1.0) {
+        if (sa.nodes.gainNode.gain.value + sa.volumeIncrement <= 2.0) {
             sa.nodes.gainNode.gain.value += sa.volumeIncrement;
         } else {
-            sa.nodes.gainNode.gain.value = 1.0;
+            sa.nodes.gainNode.gain.value = 2.0;
         }
+        sc.$volumeSlider.setCSS(sa.nodes.gainNode.gain.value);
+        sc.$volumeSlider.value = sa.nodes.gainNode.gain.value;
     }
 
     function decreaseVolume() {
@@ -117,6 +119,8 @@ app.keybinds = (function() {
         } else {
             sa.nodes.gainNode.gain.value = 0.001;
         }
+        sc.$volumeSlider.setCSS(sa.nodes.gainNode.gain.value);
+        sc.$volumeSlider.value = sa.nodes.gainNode.gain.value;
     }
 
     return {

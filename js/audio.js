@@ -330,6 +330,8 @@ app.audio = (function() {
         sa.nodes.gainNode = sa.audioCtx.createGain();
         //Create an analyser node (visualization)
         sa.nodes.analyserNode = sa.audioCtx.createAnalyser();
+        //Create a delay node
+        sa.nodes.delayNode = sa.audioCtx.createDelay();
 
         // fft stands for Fast Fourier Transform
         sa.nodes.analyserNode.fftSize = s.e.DEFAULT_NUM_SAMPLES;
@@ -340,8 +342,11 @@ app.audio = (function() {
         //Hook things up in the right order
         //NOTE: This order is constant
         // source -> gain -> analyser -> output
+        //                ->   delay  ->
         sa.nodes.sourceNode.connect(sa.nodes.sourceNodeOutput);
         sa.nodes.gainNode.connect(sa.nodes.analyserNode);
+        sa.nodes.gainNode.connect(sa.nodes.delayNode);
+        sa.nodes.delayNode.connect(sa.nodes.analyserNode);
         sa.nodes.analyserNode.connect(sa.audioCtx.destination);
     }
 

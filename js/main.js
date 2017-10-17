@@ -40,7 +40,7 @@ app.main = (function() {
         a.audio.update();
 
         //Override everything with a full-size background
-        a.ctx.fillStyle = sc.backgroundColor();
+        a.ctx.fillStyle = sc.ui.backgroundColor.get();
         a.ctx.fillRect(0, 0, a.viewport.width, a.viewport.height);
 
         a.ctx.save();
@@ -54,7 +54,7 @@ app.main = (function() {
             let barSpacing = 2;
             let barWidth = (Math.floor(a.viewport.width) - aData.length * barSpacing) / aData.length;
             for (var i = 0; i < aData.length; i++) {
-                a.drawing.drawAudioBar(i * (barWidth + barSpacing), a.viewport.height / 2.5, barWidth, aData[i], a.viewport.height / 4, sc.a_primaryColor);
+                a.drawing.drawAudioBar(i * (barWidth + barSpacing), a.viewport.height / 2.5, barWidth, aData[i], a.viewport.height / 4, sc.primaryColor.val);
             }
             //If the current visualization method is bezier curves, draw all bezier curves
         } else if (sm.graphType === s.e.DRAW_BEZIER) {
@@ -64,7 +64,7 @@ app.main = (function() {
             }
             //Draw every bezier curve in the primary color
             for (let i = 0; i < sm.bezierCurves.length; i++) {
-                a.bezier.drawBezier(sm.bezierCurves[i], aData, sc.primaryColor());
+                a.bezier.drawBezier(sm.bezierCurves[i], aData, sc.primaryColor.get());
             }
         }
         a.ctx.restore();
