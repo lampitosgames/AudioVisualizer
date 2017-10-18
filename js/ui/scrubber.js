@@ -9,6 +9,9 @@ app.scrubber = (function() {
     let scrubbing = false;
     let hover = false;
 
+    let $scrubberWrapper;
+    let $songName, $artistName;
+
     /**
      * Init the scrubber
      */
@@ -19,6 +22,10 @@ app.scrubber = (function() {
         sc = a.state.color;
         sp = a.state.parallax;
         scs = a.state.color.scrubber;
+
+        $scrubberWrapper = document.getElementById("scrubberWrapper");
+        $songName = document.getElementById("songName");
+        $artistName = document.getElementById("artistName");
     }
 
     /**
@@ -42,15 +49,18 @@ app.scrubber = (function() {
         grad.addColorStop(1, scs.gradientColor2.get());
         a.drawing.drawCircle(center[0], center[1], radius, grad);
 
-        //TODO: Use HTML for this instead of drawing on the canvas
-        //TODO: Move this to a UI module
-        app.ctx.textAlign = "center";
-        app.ctx.textBaseline = "middle";
+        //Get the song data
         let songData = s.audio.songs[s.audio.currentSong];
         if (songData) {
-            a.drawing.drawText(songData.name, center[0], center[1] - 18, "bold 28pt Arial", sc.primaryColor.get());
-            a.drawing.drawText(songData.artist, center[0], center[1] + 20, "12pt Arial", sc.primaryColor.get());
+            //Put the song data on the page
+            $songName.innerHTML = songData.name;
+            $artistName.innerHTML = songData.artist;
         }
+        //Get the bounding client rect for the scrubber wrapper html element
+        let sWrapperRect = $scrubberWrapper.getBoundingClientRect();
+        //Center the element.  This isn't done in CSS because of parallax
+        $scrubberWrapper.style.left = center[0] - (sWrapperRect.width/2) + "px";
+        $scrubberWrapper.style.top = center[1] - (sWrapperRect.height/2) + "px";
 
         //Grab the audio data
         let aData = s.audio.data;
