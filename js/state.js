@@ -184,6 +184,11 @@ app.state = (function() {
             scrubBackgroundColor: new app.Color(0, 0, 0, 0.2),
             gradientColor1: new app.Color(235, 235, 235, 1.0),
             gradientColor2: new app.Color(255, 255, 255, 1.0),
+            songNameColor: new app.Color(255, 0, 0, 1.0),
+            artistNameColor: new app.Color(255, 0, 0, 1.0),
+            skipSongColor: new app.Color(255, 0, 0, 1.0),
+            pausePlayColor: new app.Color(255, 0, 0, 1.0),
+            volumeColor: new app.Color(255, 0, 0, 1.0)
         }
     };
 

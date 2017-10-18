@@ -2,7 +2,7 @@
 
 app.colorChanging = (function() {
     let a = app;
-    let s, sco, scou, scos;
+    let s, ss, sco, scou, scos;
 
     let currentTheme = 0;
     let themes = [
@@ -22,6 +22,7 @@ app.colorChanging = (function() {
 
     function init() {
         s = a.state;
+        ss = s.scrubber;
         sco = s.color;
         scou = sco.ui;
         scos = sco.scrubber;
@@ -44,6 +45,14 @@ app.colorChanging = (function() {
         scou.textHeaderColor.addListener(updateTextColor);
         scou.textBodyColor.addListener(updateTextColor);
         updateTextColor();
+
+        //Hook up scrubber colors
+        scos.songNameColor.addListener(updateScrubberColor);
+        scos.artistNameColor.addListener(updateScrubberColor);
+        scos.skipSongColor.addListener(updateScrubberColor);
+        scos.pausePlayColor.addListener(updateScrubberColor);
+        scos.volumeColor.addListener(updateScrubberColor);
+        updateScrubberColor();
     }
 
     function setTheme(newTheme) {
@@ -82,6 +91,11 @@ app.colorChanging = (function() {
         scos.scrubBackgroundColor.set(0, 0, 0, 0.2);
         scos.gradientColor1.set(235, 235, 235, 1.0);
         scos.gradientColor2.set(255, 255, 255, 1.0);
+        scos.songNameColor.set(255, 0, 0, 1.0);
+        scos.artistNameColor.set(255, 0, 0, 1.0);
+        scos.skipSongColor.set(255, 0, 0, 1.0);
+        scos.pausePlayColor.set(255, 0, 0, 1.0);
+        scos.volumeColor.set(255, 0, 0, 1.0);
         currentTheme = 0;
     }
 
@@ -103,6 +117,11 @@ app.colorChanging = (function() {
         scos.scrubBackgroundColor.set(200, 200, 200, 0.2);
         scos.gradientColor1.set(30, 30, 30, 1.0);
         scos.gradientColor2.set(20, 20, 20, 1.0);
+        scos.songNameColor.set(5, 142, 217, 1.0);
+        scos.artistNameColor.set(5, 142, 217, 1.0);
+        scos.skipSongColor.set(250, 121, 33, 1.0);
+        scos.pausePlayColor.set(250, 121, 33, 1.0);
+        scos.volumeColor.set(250, 121, 33, 1.0);
         currentTheme = 1;
     }
 
@@ -127,7 +146,25 @@ app.colorChanging = (function() {
         scos.scrubBackgroundColor.set(r(), r(), r(), 0.2);
         scos.gradientColor1.set(r(), r(), r(), 1.0);
         scos.gradientColor2.set(r(), r(), r(), 1.0);
+        scos.songNameColor.set(r(), r(), r(), 1.0);
+        scos.artistNameColor.set(r(), r(), r(), 1.0);
+        scos.skipSongColor.set(r(), r(), r(), 1.0);
+        scos.pausePlayColor.set(r(), r(), r(), 1.0);
+        scos.volumeColor.set(r(), r(), r(), 1.0);
         currentTheme = 2;
+    }
+
+    function updateScrubberColor() {
+        ss.$songName.style.color = scos.songNameColor.get();
+        ss.$artistName.style.color = scos.artistNameColor.get();
+        ss.$prevSong.style.color = scos.skipSongColor.get();
+        ss.$nextSong.style.color = scos.skipSongColor.get();
+        ss.$playPauseButton.style.color = scos.pausePlayColor.get();
+        ss.$volumeUpIcon.style.color = scos.volumeColor.get();
+        ss.$volumeDownIcon.style.color = scos.volumeColor.get();
+        let volSlider = document.getElementById("volumeSlider");
+        volSlider.getElementsByClassName("sliderFill")[0].style.backgroundColor = scos.volumeColor.get();
+        volSlider.getElementsByClassName("sliderHandle")[0].style.backgroundColor = scos.volumeColor.get();
     }
 
     function updateCheckboxColor() {
