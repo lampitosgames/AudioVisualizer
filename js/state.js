@@ -162,6 +162,8 @@ app.state = (function() {
             textInvertedColor: new app.Color(255, 255, 255, 1.0),
             buttonMouseOver: new app.Color(200, 0, 0, 1.0),
             dropdownActiveColor: new app.Color(230, 230, 230, 1.0),
+            checkboxBorder: new app.Color(200, 200, 200, 1.0),
+            checkboxBackground: new app.Color(255, 255, 255, 1.0)
         },
 
         //Scrubber colors

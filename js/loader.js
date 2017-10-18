@@ -15,6 +15,7 @@ window.onload = function() {
     app.scrubber.init();
     app.keybinds.init();
     app.controls.init();
+    app.colorChanging.init();
 
     //Initialize main
     app.main.init();

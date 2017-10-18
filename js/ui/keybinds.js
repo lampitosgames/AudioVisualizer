@@ -42,16 +42,22 @@ app.keybinds = (function() {
     function toggleBezierCurveDisplay() {
         if (sm.graphType === s.e.DRAW_LINE) {
             sm.graphType = s.e.DRAW_BEZIER;
-            sc.$bezierCheckbox.checked = true;
+            sc.$bezierCheckbox.classList.add("checkboxActive");
         } else if (sm.graphType === s.e.DRAW_BEZIER) {
             sm.graphType = s.e.DRAW_LINE;
-            sc.$bezierCheckbox.checked = false;
+            sc.$bezierCheckbox.classList.remove("checkboxActive");
         }
+        a.colorChanging.updateCheckboxColor();
     }
 
     function toggleWaveform() {
         sa.usingWaveform = !sa.usingWaveform;
-        sc.$waveformCheckbox.checked = sa.usingWaveform;
+        if (sa.usingWaveform) {
+            sc.$waveformCheckbox.classList.add("checkboxActive");
+        } else {
+            sc.$waveformCheckbox.classList.remove("checkboxActive");
+        }
+        a.colorChanging.updateCheckboxColor();
     }
 
     function toggleParallax() {
@@ -59,7 +65,12 @@ app.keybinds = (function() {
         sp.mainParallax = [0, 0];
         sp.scrubberParallax = [0, 0];
         sp.scrubberShadow = [0.5, 0.5];
-        sc.$parallaxCheckbox.checked = sp.enabled;
+        if (sp.enabled) {
+            sc.$parallaxCheckbox.classList.add("checkboxActive");
+        } else {
+            sc.$parallaxCheckbox.classList.remove("checkboxActive");
+        }
+        a.colorChanging.updateCheckboxColor();
     }
 
     function pausePlay() {

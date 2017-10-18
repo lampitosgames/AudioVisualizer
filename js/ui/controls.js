@@ -25,7 +25,7 @@ app.controls = (function() {
 
         //Volume slider
         sc.$volumeSlider = new app.Slider("volumeSlider", 1.0, 0.001, 2.0, 0.001);
-        sc.$volumeSlider.onchange = function(val) {
+        sc.$volumeSlider.onupdate = function(val) {
             a.state.audio.nodes.gainNode.gain.value = val;
         }
 
@@ -47,52 +47,20 @@ app.controls = (function() {
         //Select song dropdown
         sc.$selectSongDropdown = new app.Dropdown("selectSongDropdown", a.state.audio.songs, function() { return a.state.audio.currentSong; });
         sc.$selectSongDropdown.onchange = a.audio.playNewAudio;
-
-        //Hook up buttons to color changes
-        sco.primaryColor.addListener(updateButtonColor);
-        scou.textInvertedColor.addListener(updateButtonColor);
-        updateButtonColor();
-
-        //Hook up the background to color changes
-        scou.backgroundColor.addListener(updateBackgroundColor);
-        updateBackgroundColor();
-
-        //Hook up the text color
-        scou.textHeaderColor.addListener(updateTextColor);
-        scou.textBodyColor.addListener(updateTextColor);
-        updateTextColor();
     }
 
     function bindCheckbox(stateVariable, checkboxId, func) {
         sc[stateVariable] = document.getElementById(checkboxId);
-        sc[stateVariable].addEventListener("change", func);
-    }
-
-    function updateTextColor() {
-        document.querySelector("body").style.color = scou.textBodyColor.get();
-        let subheaders = document.getElementsByClassName("subheader");
-        for (let i=0; i<subheaders.length; i++) {
-            subheaders[i].style.color = scou.textHeaderColor.get();
-        }
-    }
-
-    function updateBackgroundColor() {
-        document.getElementById("controlsWrapper").style.backgroundColor = scou.backgroundColor.get();
-    }
-
-    function updateButtonColor() {
-        let $buttons = document.getElementsByClassName("button");
-        for (let i=0; i<$buttons.length; i++) {
-            $buttons[i].style.backgroundColor = sco.primaryColor.get();
-            $buttons[i].style.color = scou.textInvertedColor.get();
-
-            $buttons[i].addEventListener("mouseenter", function(e) {
-                e.target.style.backgroundColor = scou.buttonMouseOver.get();
-            });
-            $buttons[i].addEventListener("mouseleave", function(e) {
-                e.target.style.backgroundColor = sco.primaryColor.get();
-            });
-        }
+        sc[stateVariable].parentElement.addEventListener("click", function() {
+            if (sc[stateVariable].classList.contains("checkboxActive")) {
+                sc[stateVariable].classList.remove("checkboxActive");
+                func(false);
+            } else {
+                sc[stateVariable].classList.add("checkboxActive");
+                func(true);
+            }
+            a.colorChanging.updateCheckboxColor();
+        });
     }
 
     return {

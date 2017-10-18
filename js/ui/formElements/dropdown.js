@@ -35,7 +35,9 @@ app.Dropdown = (function() {
                     e.target.style.backgroundColor = app.state.color.ui.dropdownActiveColor.get();
                 });
                 this.$items[e].addEventListener("mouseleave", function(e) {
-                    e.target.style.backgroundColor = app.state.color.ui.backgroundColor.get();
+                    if (!e.target.classList.contains("dropdownActive")) {
+                        e.target.style.backgroundColor = app.state.color.ui.backgroundColor.get();
+                    }
                 });
             }
             this.updateColor();
