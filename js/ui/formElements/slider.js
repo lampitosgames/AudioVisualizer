@@ -27,6 +27,7 @@ app.Slider = (function() {
             this.$sliderFill.style.width = cssPerc + "%";
             this.$sliderHandle.style.left = cssPerc + "%";
             //Update the slider value
+            if (!this.$sliderValue) return;
             this.$sliderValue.innerHTML = this.value.toPrecision(2);
         }
 

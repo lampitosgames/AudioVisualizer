@@ -76,8 +76,10 @@ app.keybinds = (function() {
     function pausePlay() {
         if (sa.paused) {
             a.audio.play();
+            ss.$playPauseButton.innerHTML = "pause_circle_filled";
         } else {
             a.audio.pause();
+            ss.$playPauseButton.innerHTML = "play_circle_filled";
         }
     }
 
@@ -139,6 +141,9 @@ app.keybinds = (function() {
         toggleControlsPanel: toggleControlsPanel,
         toggleBezierCurveDisplay: toggleBezierCurveDisplay,
         toggleWaveform: toggleWaveform,
-        toggleParallax: toggleParallax
+        toggleParallax: toggleParallax,
+        pausePlay: pausePlay,
+        previousSong: previousSong,
+        nextSong: nextSong
     }
 }());

@@ -126,7 +126,17 @@ app.state = (function() {
         //Radius of the pull tab
         smallRadius: e.DEFAULT_SMALL_RADIUS,
         //Width of the scrubber line (animate on mouseover)
-        lineWidth: e.DEFAULT_LINE_WIDTH
+        lineWidth: e.DEFAULT_LINE_WIDTH,
+        //Scrubber HTML elements
+        $scrubberWrapper: undefined,
+        $songName: undefined,
+        $artistName: undefined,
+        //Scrubber controls
+        $prevSong: undefined,
+        $playPauseButton: undefined,
+        $nextSong: undefined,
+        $volumeDownIcon: undefined,
+        $volumeUpIcon: undefined
     };
 
     //Parallax module state

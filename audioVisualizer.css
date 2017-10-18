@@ -14,6 +14,29 @@ body {
     height: 100vh;
 }
 
+#controlsHover {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 25rem;
+    height: 0px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.25);
+    transition: height 250ms ease-in-out;
+    z-index: 1;
+}
+#controlsWrapper {
+    position: absolute;
+    font-family: Roboto, Arial;
+    top: -100vh;
+    width: 25rem;
+    height: calc(100vh - 48px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 2;
+    transition: top 250ms ease-in-out;
+}
+
 #scrubberWrapper {
     display: flex;
     flex-direction: column;
@@ -23,6 +46,7 @@ body {
     flex-wrap: wrap;
     white-space: nowrap;
     color: red;
+    user-select: none;
 }
 #songName {
     font-size: 4vh;
@@ -34,10 +58,57 @@ body {
 }
 #scrubberControls {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     top: 5vh;
+    height: 0;
 }
 .controlIcon {
-
+    position: relative;
+    font-size: 3.5vh;
+    margin: 0 1rem 0 1rem;
+    cursor: pointer;
+}
+.controlIcon:after {
+    content: '';
+    position: absolute;
+    transition: all 100ms ease-out;
+    transform-origin: center;
+    width: 125%;
+    height: 125%;
+    top: -12.5%;
+    left: -12.5%;
+    border-radius: 50%;
+    transform: scale(0);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.controlIcon:active:after {
+    transform: scale(1);
+}
+#playPauseButton {
+    font-size: 5vh;
+}
+#volumeSliderWrapper {
+    width: 26vh;
+    position: relative;
+    top: 9vh;
+    left: 0;
+    padding: 0;
+    margin: 0;
+}
+#volumeSlider {
+    max-width: none;
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+.volumeIcon {
+    font-size: 2.5vh;
+    margin: 0 0.5rem 0 0.5rem !important;
+    padding: 0 !important;
+    flex-grow: 0 !important;
+    flex-shrink: 1 !important;
+    cursor: pointer;
 }
 
 .button {
@@ -73,27 +144,6 @@ body {
     z-index: 100;
     width: 25rem;
     font-size: 16px;
-}
-
-#controlsHover {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 25rem;
-    height: 0px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.25);
-    transition: height 250ms ease-in-out;
-    z-index: 1;
-}
-#controlsWrapper {
-    position: absolute;
-    font-family: Roboto, Arial;
-    top: -100vh;
-    width: 25rem;
-    height: 100vh;
-    z-index: 2;
-    transition: top 250ms ease-in-out;
 }
 
 .subheader {
@@ -230,6 +280,10 @@ body {
     transform: scale(0);
     transform-origin: 0 0;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.25);
+    z-index: 10;
+    max-height: 250px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 .dropdown:hover .dropdownPopout {
     transform: scale(1);

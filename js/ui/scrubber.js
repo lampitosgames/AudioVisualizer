@@ -3,14 +3,11 @@
 app.scrubber = (function() {
     let a = app;
     //Shorthand for the scrubber state
-    let s, ss, sc, sp, scs;
+    let s, sa, ss, sc, sp, scs;
 
     //Boolean toggles for UI animation
     let scrubbing = false;
     let hover = false;
-
-    let $scrubberWrapper;
-    let $songName, $artistName;
 
     /**
      * Init the scrubber
@@ -18,14 +15,35 @@ app.scrubber = (function() {
     function init() {
         //Get shorthand state
         s = a.state;
+        sa = a.state.audio;
         ss = a.state.scrubber;
         sc = a.state.color;
         sp = a.state.parallax;
         scs = a.state.color.scrubber;
 
-        $scrubberWrapper = document.getElementById("scrubberWrapper");
-        $songName = document.getElementById("songName");
-        $artistName = document.getElementById("artistName");
+        ss.$scrubberWrapper = document.getElementById("scrubberWrapper");
+        ss.$songName = document.getElementById("songName");
+        ss.$artistName = document.getElementById("artistName");
+        ss.$prevSong = document.getElementById("prevSong");
+        ss.$playPauseButton = document.getElementById("playPauseButton");
+        ss.$nextSong = document.getElementById("nextSong");
+        ss.$volumeDownIcon = document.getElementById("volumeDownIcon");
+        ss.$volumeUpIcon = document.getElementById("volumeUpIcon");
+
+        //Bind events to elements
+        ss.$prevSong.addEventListener("click", a.keybinds.previousSong);
+        ss.$playPauseButton.addEventListener("click", a.keybinds.pausePlay);
+        ss.$nextSong.addEventListener("click", a.keybinds.nextSong);
+        ss.$volumeUpIcon.addEventListener("click", function() {
+            sa.nodes.gainNode.gain.value = 2.0;
+            s.controls.$volumeSlider.setCSS(sa.nodes.gainNode.gain.value);
+            s.controls.$volumeSlider.value = sa.nodes.gainNode.gain.value;
+        });
+        ss.$volumeDownIcon.addEventListener("click", function() {
+            sa.nodes.gainNode.gain.value = 0.001;
+            s.controls.$volumeSlider.setCSS(sa.nodes.gainNode.gain.value);
+            s.controls.$volumeSlider.value = sa.nodes.gainNode.gain.value;
+        });
     }
 
     /**
@@ -53,14 +71,18 @@ app.scrubber = (function() {
         let songData = s.audio.songs[s.audio.currentSong];
         if (songData) {
             //Put the song data on the page
-            $songName.innerHTML = songData.name;
-            $artistName.innerHTML = songData.artist;
+            if (ss.$songName.innerHTML != songData.name) {
+                ss.$songName.innerHTML = songData.name;
+            }
+            if (ss.$artistName.innerHTML != songData.artist) {
+                ss.$artistName.innerHTML = songData.artist;
+            }
         }
         //Get the bounding client rect for the scrubber wrapper html element
-        let sWrapperRect = $scrubberWrapper.getBoundingClientRect();
+        let sWrapperRect = ss.$scrubberWrapper.getBoundingClientRect();
         //Center the element.  This isn't done in CSS because of parallax
-        $scrubberWrapper.style.left = center[0] - (sWrapperRect.width/2) + "px";
-        $scrubberWrapper.style.top = center[1] - (sWrapperRect.height/2) + "px";
+        ss.$scrubberWrapper.style.left = center[0] - (sWrapperRect.width/2) + "px";
+        ss.$scrubberWrapper.style.top = center[1] - (sWrapperRect.height/2) + "px";
 
         //Grab the audio data
         let aData = s.audio.data;

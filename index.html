@@ -36,11 +36,19 @@
             Relient K
         </div>
         <div id="scrubberControls">
-            <i class="material-icons">skip_previous</i>
-            <i class="material-icons controlIcon">play_circle_filled</i>
-            <i class="material-icons">skip_next</i>
+            <i class="material-icons controlIcon" id="prevSong">skip_previous</i>
+            <i class="material-icons controlIcon" id="playPauseButton">pause_circle_filled</i>
+            <i class="material-icons controlIcon" id="nextSong">skip_next</i>
+        </div>
+        <div class="sliderBox" id="volumeSliderWrapper">
+            <i class="material-icons volumeIcon sliderIcon" id="volumeDownIcon">volume_down</i>
+            <div class="slider" id="volumeSlider">
+                <div class="sliderFill"></div><div class="sliderHandle"></div>
+            </div>
+            <i class="material-icons volumeIcon sliderIcon" id="volumeUpIcon">volume_up</i>
         </div>
     </div>
+
     <div class="button" id="toggleControls">Show Controls</div>
     <div id="controlsHover">
         <div id="controlsWrapper">
@@ -88,14 +96,6 @@
             </div>
 
             <div class="subheader">Audio</div>
-            <div class="sliderBox">
-                <div class="sliderLabel">Volume</div>
-                <i class="material-icons sliderIcon">volume_up</i>
-                <div class="slider" id="volumeSlider">
-                    <div class="sliderFill"></div><div class="sliderHandle"></div>
-                </div>
-                <div class="sliderValue"></div>
-            </div>
             <div class="sliderBox">
                 <div class="sliderLabel">Playback Speed</div>
                 <i class="material-icons sliderIcon">fast_forward</i>
