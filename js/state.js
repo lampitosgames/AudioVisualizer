@@ -44,6 +44,7 @@ app.state = (function() {
         $delaySlider: undefined,
         //Dropdowns
         $selectSongDropdown: undefined,
+        $selectThemeDropdown: undefined
     }
 
     //Audio module state

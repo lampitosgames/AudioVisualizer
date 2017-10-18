@@ -47,6 +47,10 @@ app.controls = (function() {
         //Select song dropdown
         sc.$selectSongDropdown = new app.Dropdown("selectSongDropdown", a.state.audio.songs, function() { return a.state.audio.currentSong; });
         sc.$selectSongDropdown.onchange = a.audio.playNewAudio;
+
+        //Select theme dropdown
+        sc.$selectThemeDropdown = new app.Dropdown("themeDropdown", a.colorChanging.themes, a.colorChanging.currentTheme);
+        sc.$selectThemeDropdown.onchange = a.colorChanging.setTheme;
     }
 
     function bindCheckbox(stateVariable, checkboxId, func) {
