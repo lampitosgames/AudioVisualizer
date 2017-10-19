@@ -1,5 +1,6 @@
 "use strict";
 
+//This class handles the UI dropdown elements.  Each one has its own dropdown instance
 app.Dropdown = (function() {
     function Dropdown(dropdownID, itemList, getActiveItem) {
         //Slider elements and properties
@@ -16,7 +17,7 @@ app.Dropdown = (function() {
 
         this.render = function() {
             let newListItems = "";
-            for (let i=0; i<this.itemList.length; i++) {
+            for (let i = 0; i < this.itemList.length; i++) {
                 if (i == this.getActive()) {
                     newListItems += '<li class="dropdownItem dropdownActive">' + this.itemList[i].name + '</li>'
                 } else {
@@ -27,7 +28,7 @@ app.Dropdown = (function() {
 
             //Bind mouse events to the new items
             this.$items = this.$popout.getElementsByClassName("dropdownItem");
-            for (let e=0; e<this.$items.length; e++) {
+            for (let e = 0; e < this.$items.length; e++) {
                 this.$items[e].addEventListener("mousedown", function() {
                     this.onchange(this.$items[e].innerHTML);
                 }.bind(this));
@@ -47,7 +48,7 @@ app.Dropdown = (function() {
             this.$dropdown.style.backgroundColor = app.state.color.primaryColor.get();
             this.$dropdown.style.color = app.state.color.ui.textInvertedColor.get();
             this.$popout.style.backgroundColor = app.state.color.ui.backgroundColor.get();
-            for (let e=0; e<this.$items.length; e++) {
+            for (let e = 0; e < this.$items.length; e++) {
                 this.$items[e].style.color = app.state.color.ui.textBodyColor.get();
             }
             this.$popout.getElementsByClassName("dropdownActive")[0].style.backgroundColor = app.state.color.ui.dropdownActiveColor.get();

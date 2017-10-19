@@ -1,5 +1,5 @@
 "use strict";
-
+//The state module contains state for all other modules, providing easy data access and modification from anywhere in the app
 app.state = (function() {
     let a = app;
 
@@ -37,6 +37,11 @@ app.state = (function() {
         $bezierCheckbox: undefined,
         $waveformCheckbox: undefined,
         $parallaxCheckbox: undefined,
+        $invertCheckbox: undefined,
+        $noiseCheckbox: undefined,
+        $redshiftCheckbox: undefined,
+        $blueshiftCheckbox: undefined,
+        $greenshiftCheckbox: undefined,
         //Sliders
         $playbackSpeedSlider: undefined,
         $sampleCountSlider: undefined,
@@ -45,7 +50,7 @@ app.state = (function() {
         //Dropdowns
         $selectSongDropdown: undefined,
         $selectThemeDropdown: undefined
-    }
+    };
 
     //Audio module state
     let audio = {
@@ -142,12 +147,16 @@ app.state = (function() {
     //Parallax module state
     let parallax = {
         enabled: false,
-        mainParallax: [0, 0],
+        mainParallax: [
+            0, 0
+        ],
         mainScale: -0.03,
-        scrubberParallax: [0, 0],
+        scrubberParallax: [
+            0, 0
+        ],
         scrubberScale: 0.03,
         scrubberShadow: [0.5, 0.5]
-    }
+    };
 
     //Time module state
     let time = {
@@ -159,9 +168,18 @@ app.state = (function() {
         lastTime: 0,
         //Current frames per second
         fps: 0
-    }
+    };
 
-    //App-wide color constants
+    //Image Manipulation state
+    let image = {
+        inverted: false,
+        addNoise: false,
+        redshift: false,
+        blueshift: false,
+        greenshift: false
+    };
+
+    //App-wide colors (colors are a custom class with color change events)
     let color = {
         primaryColor: new app.Color(255, 0, 0, 1.0),
         secondaryColor: new app.Color(200, 200, 200, 1.0),
@@ -192,6 +210,7 @@ app.state = (function() {
         }
     };
 
+    //Expose all state variables to the app
     return {
         e: e,
         main: main,
@@ -200,6 +219,7 @@ app.state = (function() {
         scrubber: scrubber,
         parallax: parallax,
         time: time,
+        image: image,
         color: color
     };
 }());

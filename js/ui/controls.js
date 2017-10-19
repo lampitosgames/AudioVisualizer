@@ -1,7 +1,11 @@
+"use strict";
 
+//This module handles all of the controls in the control panel.
 app.controls = (function() {
     let a = app;
-    let sc, sco, scou;
+    let sc,
+        sco,
+        scou;
 
     function init() {
         sc = a.state.controls;
@@ -14,8 +18,26 @@ app.controls = (function() {
         bindCheckbox("$bezierCheckbox", "bezierEnabled", a.keybinds.toggleBezierCurveDisplay);
         bindCheckbox("$waveformCheckbox", "waveformEnabled", a.keybinds.toggleWaveform);
         bindCheckbox("$parallaxCheckbox", "parallaxEnabled", a.keybinds.toggleParallax);
+        //Pixel manipulation checkboxes
+        bindCheckbox("$invertCheckbox", "invertEnabled", function(val) {
+            a.state.image.inverted = val;
+        });
+        bindCheckbox("$noiseCheckbox", "noiseEnabled", function(val) {
+            a.state.image.addNoise = val;
+        });
+        bindCheckbox("$redshiftCheckbox", "redshiftEnabled", function(val) {
+            a.state.image.redshift = val;
+        });
+        bindCheckbox("$blueshiftCheckbox", "blueshiftEnabled", function(val) {
+            a.state.image.blueshift = val;
+        });
+        bindCheckbox("$greenshiftCheckbox", "greenshiftEnabled", function(val) {
+            a.state.image.greenshift = val;
+        });
 
-        document.getElementById("toggleControls").onclick = function() { a.keybinds.toggleControlsPanel(!sc.visible); };
+        document.getElementById("toggleControls").onclick = function() {
+            a.keybinds.toggleControlsPanel(!sc.visible);
+        };
 
         //Sample count slider
         sc.$sampleCountSlider = new app.Slider("sampleCountSlider", 10, 7, 12, 1);
@@ -45,7 +67,9 @@ app.controls = (function() {
         }
 
         //Select song dropdown
-        sc.$selectSongDropdown = new app.Dropdown("selectSongDropdown", a.state.audio.songs, function() { return a.state.audio.currentSong; });
+        sc.$selectSongDropdown = new app.Dropdown("selectSongDropdown", a.state.audio.songs, function() {
+            return a.state.audio.currentSong;
+        });
         sc.$selectSongDropdown.onchange = a.audio.playNewAudio;
 
         //Select theme dropdown
@@ -67,7 +91,5 @@ app.controls = (function() {
         });
     }
 
-    return {
-        init: init
-    }
+    return {init: init}
 }());

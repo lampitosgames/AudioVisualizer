@@ -1,5 +1,7 @@
 "use strict";
 
+//The Slider class
+//Each slider on the UI has an instance of this class to handle its input
 app.Slider = (function() {
     function Slider(sliderID, defaultVal, minVal, maxVal, increment) {
         //Slider elements and properties
@@ -27,7 +29,8 @@ app.Slider = (function() {
             this.$sliderFill.style.width = cssPerc + "%";
             this.$sliderHandle.style.left = cssPerc + "%";
             //Update the slider value
-            if (!this.$sliderValue) return;
+            if (!this.$sliderValue)
+                return;
             this.$sliderValue.innerHTML = this.value.toPrecision(2);
         }
 
@@ -75,7 +78,7 @@ app.Slider = (function() {
             let relX = app.utils.map(m[0] - sliderBounds.x, 0, sliderBounds.width, this.minVal, this.maxVal);
             //Clamp the value
             relX = app.utils.clamp(relX, this.minVal, this.maxVal);
-            relX = Math.round(relX/this.increment)*this.increment;
+            relX = Math.round(relX / this.increment) * this.increment;
             //Set the css to match the new value
             this.setCSS(relX);
             //Set the slider value

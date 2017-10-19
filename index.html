@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Audio Visualizer - Daniel Timko</title>
+    <link rel="icon" href="../../../favicon.ico">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="audioVisualizer.css" />
     <script type="text/javascript" src="./js/loader.js"></script>
@@ -14,6 +15,7 @@
     <script type="text/javascript" src="./js/utils/fileLoader.js"></script>
     <script type="text/javascript" src="./js/drawing/drawing.js"></script>
     <script type="text/javascript" src="./js/drawing/bezier.js"></script>
+    <script type="text/javascript" src="./js/drawing/imageManipulation.js"></script>
     <script type="text/javascript" src="./js/ui/keybinds.js"></script>
     <script type="text/javascript" src="./js/ui/scrubber.js"></script>
     <script type="text/javascript" src="./js/ui/parallax.js"></script>
@@ -30,10 +32,10 @@
     <canvas id="canvas"></canvas>
     <div id="scrubberWrapper">
         <div id="songName">
-            Devastation and Reform
+            This is a song name
         </div>
         <div id="artistName">
-            Relient K
+            This is a band name
         </div>
         <div id="scrubberControls">
             <i class="material-icons controlIcon" id="prevSong">skip_previous</i>
@@ -43,7 +45,8 @@
         <div class="sliderBox" id="volumeSliderWrapper">
             <i class="material-icons volumeIcon sliderIcon" id="volumeDownIcon">volume_down</i>
             <div class="slider" id="volumeSlider">
-                <div class="sliderFill"></div><div class="sliderHandle"></div>
+                <div class="sliderFill"></div>
+                <div class="sliderHandle"></div>
             </div>
             <i class="material-icons volumeIcon sliderIcon" id="volumeUpIcon">volume_up</i>
         </div>
@@ -57,7 +60,8 @@
                 <div class="sliderLabel">Sample Count Multiplier</div>
                 <i class="material-icons sliderIcon">equalizer</i>
                 <div class="slider" id="sampleCountSlider">
-                    <div class="sliderFill"></div><div class="sliderHandle"></div>
+                    <div class="sliderFill"></div>
+                    <div class="sliderHandle"></div>
                 </div>
                 <div class="sliderValue"></div>
             </div>
@@ -65,7 +69,8 @@
                 <div class="sliderLabel">Audio Logarithmic Scale</div>
                 <i class="material-icons sliderIcon">show_chart</i>
                 <div class="slider" id="logScaleSlider">
-                    <div class="sliderFill"></div><div class="sliderHandle"></div>
+                    <div class="sliderFill"></div>
+                    <div class="sliderHandle"></div>
                 </div>
                 <div class="sliderValue"></div>
             </div>
@@ -100,7 +105,8 @@
                 <div class="sliderLabel">Playback Speed</div>
                 <i class="material-icons sliderIcon">fast_forward</i>
                 <div class="slider" id="playbackSpeedSlider">
-                    <div class="sliderFill"></div><div class="sliderHandle"></div>
+                    <div class="sliderFill"></div>
+                    <div class="sliderHandle"></div>
                 </div>
                 <div class="sliderValue"></div>
             </div>
@@ -108,7 +114,8 @@
                 <div class="sliderLabel">Delay</div>
                 <i class="material-icons sliderIcon">access_alarm</i>
                 <div class="slider" id="delaySlider">
-                    <div class="sliderFill"></div><div class="sliderHandle"></div>
+                    <div class="sliderFill"></div>
+                    <div class="sliderHandle"></div>
                 </div>
                 <div class="sliderValue"></div>
             </div>
@@ -120,6 +127,41 @@
             <div class="button uploadButton">Upload Song
                 <input id="uploader" class="controlBlock" type="file" />
             </div>
+
+            <div class="subheader">Image Pixel Manipulation</div>
+            <ul class="list">
+                <li class="listItem">
+                    <label class="checkboxLabel">
+                        <div id="invertEnabled" class="checkbox"></div>
+                        Invert Color
+                    </label>
+                </li>
+                <li class="listItem">
+                    <label class="checkboxLabel">
+                        <div id="noiseEnabled" class="checkbox"></div>
+                        Generate Noise
+                    </label>
+                </li>
+                <li class="listItem">
+                    <label class="checkboxLabel">
+                        <div id="redshiftEnabled" class="checkbox"></div>
+                        Redshift
+                    </label>
+                </li>
+                <li class="listItem">
+                    <label class="checkboxLabel">
+                        <div id="blueshiftEnabled" class="checkbox"></div>
+                        Blueshift
+                    </label>
+                </li>
+                <li class="listItem">
+                    <label class="checkboxLabel">
+                        <div id="greenshiftEnabled" class="checkbox"></div>
+                        Greenshift
+                    </label>
+                </li>
+            </ul>
+            <div class="subheader" id="madeBy">Made by Daniel Timko</div>
         </div>
     </div>
 </body>

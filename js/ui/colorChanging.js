@@ -1,5 +1,7 @@
 "use strict";
 
+//This module binds HTML elements to color change events
+//Also handles color themes
 app.colorChanging = (function() {
     let a = app;
     let s, ss, sco, scou, scos;

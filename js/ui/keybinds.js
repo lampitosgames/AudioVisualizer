@@ -1,9 +1,15 @@
 "use strict";
 
 //Sets up all keyboard commands for the app
+//Also holds definitions for functions controled via the UI
 app.keybinds = (function() {
     let a = app;
-    let s, sm, sc, sa, ss, sp;
+    let s,
+        sm,
+        sc,
+        sa,
+        ss,
+        sp;
     function init() {
         //Get shorthand state variables
         s = a.state;
@@ -13,8 +19,12 @@ app.keybinds = (function() {
         ss = s.scrubber;
         sp = s.parallax;
 
-        a.keys.keyUp("c", function() { toggleControlsPanel(!sc.visible); });
-        a.keys.keyUp("esc", function() { toggleControlsPanel(false); });
+        a.keys.keyUp("c", function() {
+            toggleControlsPanel(!sc.visible);
+        });
+        a.keys.keyUp("esc", function() {
+            toggleControlsPanel(false);
+        });
         a.keys.keyUp("g", toggleBezierCurveDisplay);
         a.keys.keyUp("w", toggleWaveform);
         a.keys.keyUp("p", toggleParallax);
@@ -84,17 +94,25 @@ app.keybinds = (function() {
     }
 
     function previousSong() {
-        if (a.keys.pressed("windows")) return;
-        if (a.keys.pressed("shift")) return;
+        if (a.keys.pressed("windows"))
+            return;
+        if (a.keys.pressed("shift"))
+            return;
+
         //Get the new index.  Wrap if necissary
-        let newIndex = sa.currentSong - 1 < 0 ? sa.songs.length-1 : sa.currentSong - 1;
+        let newIndex = sa.currentSong - 1 < 0
+            ? sa.songs.length - 1
+            : sa.currentSong - 1;
         //Play the new song
         a.audio.playNewAudio(newIndex);
     }
 
     function nextSong() {
-        if (a.keys.pressed("windows")) return;
-        if (a.keys.pressed("shift")) return;
+        if (a.keys.pressed("windows"))
+            return;
+        if (a.keys.pressed("shift"))
+            return;
+
         //Get the new index.  Wrap if necissary
         let newIndex = (sa.currentSong + 1) % sa.songs.length;
         //Play the new song
@@ -103,19 +121,22 @@ app.keybinds = (function() {
 
     function fastBackward() {
         //Fast backward 10 seconds
-        if (!a.keys.pressed("shift")) return;
+        if (!a.keys.pressed("shift"))
+            return;
         let newTime = Math.max(0.0, sa.audioTimestamp - 10.0);
         a.audio.seekToTime(newTime);
     }
 
     function fastForward() {
-        if (!a.keys.pressed("shift")) return;
+        if (!a.keys.pressed("shift"))
+            return;
         let newTime = Math.min(a.audio.getAudioLength(), sa.audioTimestamp + 10.0);
         a.audio.seekToTime(newTime);
     }
 
     function increaseVolume() {
-        if (a.keys.pressed("windows")) return;
+        if (a.keys.pressed("windows"))
+            return;
         if (sa.nodes.gainNode.gain.value + sa.volumeIncrement <= 2.0) {
             sa.nodes.gainNode.gain.value += sa.volumeIncrement;
         } else {
@@ -126,7 +147,8 @@ app.keybinds = (function() {
     }
 
     function decreaseVolume() {
-        if (a.keys.pressed("windows")) return;
+        if (a.keys.pressed("windows"))
+            return;
         if (sa.nodes.gainNode.gain.value - sa.volumeIncrement >= 0.1) {
             sa.nodes.gainNode.gain.value -= sa.volumeIncrement;
         } else {

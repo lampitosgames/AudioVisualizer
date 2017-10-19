@@ -1,6 +1,6 @@
 "use strict";
 
-//Timing module
+//Timing module for delta time and FPS
 app.time = (function() {
     let a = app;
     //Shorthand time state
@@ -10,7 +10,7 @@ app.time = (function() {
      * Init the time module
      */
     function init() {
-        //Get shorthand time state
+        //Shorthand state
         st = app.state.time;
     }
 
@@ -39,7 +39,6 @@ app.time = (function() {
         st.runTime += st.dt;
     }
 
-    //Exports
     return {
         calculateDeltaTime: calculateDeltaTime,
         update: update,

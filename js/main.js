@@ -7,18 +7,22 @@ app.ctx = undefined;
 //Define main module
 app.main = (function() {
     let a = app;
-    let s, sm, sc, sp;
+    let s,
+        sm,
+        sc,
+        sp;
 
     /**
      * Init the main module.  Setup the canvas.  Call the initial resize and update
      * to trigger requestAnimationFrame()
      */
     function init() {
-        //Store the main module state in shorthand
+        //State shorthand
         s = a.state;
         sm = s.main;
         sc = s.color;
         sp = s.parallax;
+
         //Init canvas
         a.canvas = document.getElementById("canvas");
         //Bind resize, then call it as part of initialization
@@ -43,6 +47,7 @@ app.main = (function() {
         a.ctx.fillStyle = sc.ui.backgroundColor.get();
         a.ctx.fillRect(0, 0, a.viewport.width, a.viewport.height);
 
+        //Apply parallax to the canvas
         a.ctx.save();
         a.ctx.translate(sp.mainParallax[0], sp.mainParallax[1]);
 
@@ -51,12 +56,14 @@ app.main = (function() {
 
         //If the current visualization method is a straight line, draw a line visualization
         if (sm.graphType === s.e.DRAW_LINE) {
+            //Re-calculate bar size based on the viewport size and amount of audio data
             let barSpacing = 2;
             let barWidth = (Math.floor(a.viewport.width) - aData.length * barSpacing) / aData.length;
+            //Loop over all of the data and draw an audio bar
             for (var i = 0; i < aData.length; i++) {
                 a.drawing.drawAudioBar(i * (barWidth + barSpacing), a.viewport.height / 2.5, barWidth, aData[i], a.viewport.height / 4, sc.primaryColor.val);
             }
-            //If the current visualization method is bezier curves, draw all bezier curves
+        //If the current visualization method is bezier curves, draw all bezier curves
         } else if (sm.graphType === s.e.DRAW_BEZIER) {
             //If the length of the bezier curve doesn't match the length of the audio data, re-render the curve
             if (sm.bezierCurves[0].length != a.audio.getDataLength()) {
@@ -67,12 +74,13 @@ app.main = (function() {
                 a.bezier.drawBezier(sm.bezierCurves[i], aData, sc.primaryColor.get());
             }
         }
+        //Restore state to before parallax translation
         a.ctx.restore();
 
-        //Update the UI
-        //TODO: Replace this with a ui module
+        //Update other modules
         a.scrubber.update();
         a.parallax.update();
+        a.image.update();
     }
 
     /**
@@ -89,16 +97,11 @@ app.main = (function() {
         a.ctx = a.canvas.getContext('2d');
 
         //Resize the UI
-        //TODO: Replace this with a ui module
         a.scrubber.resize();
 
         //Re-calculate bezier curves using updated anchor points
         a.bezier.updateBezierCurves();
     }
 
-    return {
-        init: init,
-        update: update,
-        resize: resize
-    }
+    return {init: init, update: update, resize: resize}
 }());

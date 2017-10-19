@@ -1,5 +1,7 @@
 "use strict";
 
+//Module with helpful drawing functions related to this app.
+//Basically I just broke a lot of draw code out into this module to make things simpler
 app.drawing = (function() {
     let a = app;
 
@@ -90,10 +92,5 @@ app.drawing = (function() {
         c.restore();
     }
 
-    return {
-        drawCircle: drawCircle,
-        drawText: drawText,
-        drawAudioBar: drawAudioBar,
-        drawAudioCircle: drawAudioCircle
-    };
+    return {drawCircle: drawCircle, drawText: drawText, drawAudioBar: drawAudioBar, drawAudioCircle: drawAudioCircle};
 }());

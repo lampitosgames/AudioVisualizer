@@ -1,6 +1,4 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,700');
-
-
 body {
     margin: 0px;
     font-family: Roboto;
@@ -25,6 +23,7 @@ body {
     transition: height 250ms ease-in-out;
     z-index: 1;
 }
+
 #controlsWrapper {
     position: absolute;
     font-family: Roboto, Arial;
@@ -35,6 +34,12 @@ body {
     overflow-x: hidden;
     z-index: 2;
     transition: top 250ms ease-in-out;
+}
+
+#madeBy {
+    font-size: 12px;
+    margin-bottom: 4rem;
+    margin-top: 1rem;
 }
 
 #scrubberWrapper {
@@ -48,14 +53,17 @@ body {
     color: red;
     user-select: none;
 }
+
 #songName {
     font-size: 4vh;
     font-weight: bold;
 }
+
 #artistName {
     padding-top: 10px;
     font-size: 2vh;
 }
+
 #scrubberControls {
     position: relative;
     display: flex;
@@ -64,12 +72,14 @@ body {
     top: 5vh;
     height: 0;
 }
+
 .controlIcon {
     position: relative;
     font-size: 3.5vh;
     margin: 0 1rem 0 1rem;
     cursor: pointer;
 }
+
 .controlIcon:after {
     content: '';
     position: absolute;
@@ -83,12 +93,15 @@ body {
     transform: scale(0);
     background-color: rgba(0, 0, 0, 0.1);
 }
+
 .controlIcon:active:after {
     transform: scale(1);
 }
+
 #playPauseButton {
     font-size: 5vh;
 }
+
 #volumeSliderWrapper {
     width: 26vh;
     position: relative;
@@ -97,11 +110,13 @@ body {
     padding: 0;
     margin: 0;
 }
+
 #volumeSlider {
     max-width: none;
     flex-grow: 1;
     flex-shrink: 0;
 }
+
 .volumeIcon {
     font-size: 2.5vh;
     margin: 0 0.5rem 0 0.5rem !important;
@@ -127,6 +142,7 @@ body {
     padding: 0px 1rem 0px 1rem;
     margin-left: 1.5rem;
 }
+
 #uploader {
     position: absolute;
     left: 0;
@@ -173,6 +189,7 @@ body {
     font-size: 14px;
     cursor: pointer;
 }
+
 .checkbox {
     position: relative;
     display: inline-block;
@@ -182,6 +199,7 @@ body {
     width: 0.8rem;
     height: 0.8rem;
 }
+
 .checkboxActive {
     transform: rotate(-45deg);
     height: 0.4rem;
@@ -200,6 +218,7 @@ body {
     padding-left: 1.5rem;
     padding-right: 2rem;
 }
+
 .sliderLabel {
     display: block;
     font-family: Roboto;
@@ -207,17 +226,20 @@ body {
     width: 100%;
     margin-bottom: 0.5rem;
 }
+
 .sliderIcon {
     display: flex;
     flex-shrink: 3;
     margin-right: 1.8rem;
 }
+
 .sliderValue {
     display: flex;
     flex-shrink: 3;
     margin-left: 1.8rem;
     font-size: 14px;
 }
+
 .slider {
     display: flex;
     position: relative;
@@ -226,6 +248,7 @@ body {
     max-width: 65%;
     height: 4px;
 }
+
 .sliderFill {
     display: block;
     position: absolute;
@@ -234,6 +257,7 @@ body {
     user-select: none;
     z-index: 3;
 }
+
 .sliderHandle {
     cursor: pointer;
     position: absolute;
@@ -247,9 +271,11 @@ body {
     user-select: none;
     z-index: 4;
 }
+
 .sliderHandle:hover {
     transform: scale(1.1);
 }
+
 .sliderHandle:active {
     transform: scale(1.3);
 }
@@ -269,6 +295,7 @@ body {
     font-family: Roboto, Arial;
     font-size: 14px;
 }
+
 .dropdownPopout {
     position: absolute;
     z-index: 4;
@@ -285,9 +312,11 @@ body {
     overflow-x: hidden;
     overflow-y: auto;
 }
+
 .dropdown:hover .dropdownPopout {
     transform: scale(1);
 }
+
 .dropdownItem {
     display: block;
     width: 100%;

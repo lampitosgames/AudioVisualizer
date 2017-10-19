@@ -1,9 +1,12 @@
 "use strict";
 
+//File loading module that lets users upload audio files.
+//Once uploaded, it verifies the format and plugs the data into the audio module
 app.file = (function() {
     let uploaderElement;
     let fileReader;
 
+    //Init function to setup the module
     function init() {
         //Create a file reader so the user can upload songs
         fileReader = new FileReader();
@@ -13,11 +16,14 @@ app.file = (function() {
         uploaderElement.addEventListener("change", handleUpload);
     }
 
+    //Function called when the user uploads a file
     function handleUpload() {
         //Grab the file and read it as an array buffer if it is an mp3
         let file = this.files[0];
-        if (file.type !== "audio/mp3")
+        //Check that the file is an audio file
+        if (file.type !== "audio/mp3" && file.type !== "audio/flac")
             return;
+
         //Read the audio data
         let audioData = fileReader.readAsArrayBuffer(file);
 
@@ -29,13 +35,15 @@ app.file = (function() {
             let songId = app.state.audio.songs.length;
             //Get the string split index to cut out the global filepath and leave us with just the filename
             let fName = uploaderElement.value;
-            let splitIndex = (fName.indexOf('\\') >= 0 ? fName.lastIndexOf('\\') : fName.lastIndexOf('/'));
+            let splitIndex = (fName.indexOf('\\') >= 0
+                ? fName.lastIndexOf('\\')
+                : fName.lastIndexOf('/'));
             //Push the new song to the song array.
             app.state.audio.songs.push({
                 id: songId,
                 hasBuffer: true,
                 buffer: fileReader.result,
-                name: fName.substr(splitIndex+1),
+                name: fName.substr(splitIndex + 1),
                 artist: "Unknown",
                 album: "Unknown"
             });

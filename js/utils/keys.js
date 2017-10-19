@@ -24,7 +24,7 @@ app.keys = (function() {
                 //Set the key to pressed
                 keys[e.keyCode].pressed = true;
                 //Loop and call all bound functions
-                for (let i=0; i<keys[e.keyCode].keyDown.length; i++) {
+                for (let i = 0; i < keys[e.keyCode].keyDown.length; i++) {
                     keys[e.keyCode].keyDown[i]();
                 }
             }
@@ -43,7 +43,7 @@ app.keys = (function() {
                 //Set the key to not pressed
                 keys[e.keyCode].pressed = false;
                 //Loop and call all bound functions
-                for (let i=0; i<keys[e.keyCode].keyUp.length; i++) {
+                for (let i = 0; i < keys[e.keyCode].keyUp.length; i++) {
                     keys[e.keyCode].keyUp[i]();
                 }
             }
@@ -52,10 +52,7 @@ app.keys = (function() {
         //Add an event listener for mouse movement
         window.addEventListener("mousemove", function(e) {
             //Get the mouse position
-            mouse = [
-                e.clientX,
-                e.clientY
-            ];
+            mouse = [e.clientX, e.clientY];
         });
     }
 
@@ -124,6 +121,7 @@ app.keys = (function() {
     function getKeyCode(key) {
         let keyCode = key;
         if (typeof key === 'string') {
+            //This is probably inefficient
             switch (key) {
                 case "up":
                     keyCode = 38;

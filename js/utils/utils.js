@@ -107,10 +107,3 @@ app.getViewport = function() {
         vh: ele[pre + 'Height'] / 100.0
     };
 }
-
-app.getMouse = function(e) {
-    return [
-        e.pageX - e.target.offsetLeft,
-        e.pageY - e.target.offsetTop
-    ];
-}

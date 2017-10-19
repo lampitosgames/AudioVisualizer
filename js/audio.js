@@ -1,9 +1,10 @@
 "use strict";
 
-//Audio module
+//Audio module used for loading and manipulating audio files/buffers/data
 app.audio = (function() {
     let a = app;
-    let s, sa;
+    let s,
+        sa;
 
     //Promise used for async loading of new songs
     let newAudioPromise = undefined;
@@ -13,11 +14,13 @@ app.audio = (function() {
      * Load and play the first song
      */
     function init() {
-        //Get shorthand state variables
+        //Shorthand state
         s = app.state;
         sa = app.state.audio;
+
         //Initialize audio context and nodes
         createAudioContext();
+
         //Set the volume
         sa.nodes.gainNode.gain.value = s.e.DEFAULT_VOLUME;
 
@@ -107,7 +110,7 @@ app.audio = (function() {
                 if (savePausedState) {
                     pauseAudio();
                 }
-                //Update the song select
+                //Update the song select dropdown
                 s.controls.$selectSongDropdown.render();
                 resolve();
             }, reject);
@@ -122,9 +125,10 @@ app.audio = (function() {
      * This function assumes that songs[id].buffer is defined as an ArrayBuffer or an AudioBuffer
      */
     function playFromBuffer(id, savePausedState = false) {
-        //If a promise is waiting to be resolved (new song loading), do nothing
+        //If a promise is waiting to be resolved (new song loading), do nothing to prevent two buffers playong on top of each other
         if (newAudioPromise != undefined)
             return;
+
         //Stop the currently playing audio
         stopAudio();
         //If the sourceNode already has a defined buffer, re-create it
@@ -396,10 +400,12 @@ app.audio = (function() {
         updateAudioAnalyser: updateAudioAnalyser,
         playFromBuffer: playFromBuffer,
         getDataMax: function() {
-            return sa.usingWaveform ? 255 : Math.pow(255, sa.exponentScale);
+            return sa.usingWaveform
+                ? 255
+                : Math.pow(255, sa.exponentScale);
         },
         getDataLength: function() {
-            return sa.nodes.analyserNode.fftSize/4;
+            return sa.nodes.analyserNode.fftSize / 4;
         }
     }
 }());

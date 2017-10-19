@@ -1,9 +1,15 @@
 "use strict";
 
+//This module handles everything related to the scrubber and audio controls in the center of the screen
 app.scrubber = (function() {
     let a = app;
     //Shorthand for the scrubber state
-    let s, sa, ss, sc, sp, scs;
+    let s,
+        sa,
+        ss,
+        sc,
+        sp,
+        scs;
 
     //Boolean toggles for UI animation
     let scrubbing = false;
@@ -13,7 +19,7 @@ app.scrubber = (function() {
      * Init the scrubber
      */
     function init() {
-        //Get shorthand state
+        //Shorthand state
         s = a.state;
         sa = a.state.audio;
         ss = a.state.scrubber;
@@ -21,6 +27,7 @@ app.scrubber = (function() {
         sp = a.state.parallax;
         scs = a.state.color.scrubber;
 
+        //Get scrubber-related HTML elements
         ss.$scrubberWrapper = document.getElementById("scrubberWrapper");
         ss.$songName = document.getElementById("songName");
         ss.$artistName = document.getElementById("artistName");
@@ -52,14 +59,16 @@ app.scrubber = (function() {
     function update() {
         //Grab variables from state
         let radius = ss.radius;
+        //Get the center according to current parallax values
         let center = ss.center = [
-            a.viewport.width/2 + sp.scrubberParallax[0],
-            a.viewport.height/2 + sp.scrubberParallax[1]
+            a.viewport.width / 2 + sp.scrubberParallax[0],
+            a.viewport.height / 2 + sp.scrubberParallax[1]
         ];
 
         //draw the circle's shadow by layering very transparent circles in a line
+        //This is modified slightly by parallax
         for (let i = Math.floor(radius * 0.5); i > 0; i -= 3) {
-            a.drawing.drawCircle(center[0] - sp.scrubberShadow[0]*i, center[1] + sp.scrubberShadow[1]*i, radius, scs.shadowColor.get());
+            a.drawing.drawCircle(center[0] - sp.scrubberShadow[0] * i, center[1] + sp.scrubberShadow[1] * i, radius, scs.shadowColor.get());
         }
         //Draw the main circle.  The gradient helps it stand out against the background
         let grad = a.ctx.createLinearGradient(center[0] + radius, center[1] - radius, center[0] - radius, center[1] + radius);
@@ -81,8 +90,8 @@ app.scrubber = (function() {
         //Get the bounding client rect for the scrubber wrapper html element
         let sWrapperRect = ss.$scrubberWrapper.getBoundingClientRect();
         //Center the element.  This isn't done in CSS because of parallax
-        ss.$scrubberWrapper.style.left = center[0] - (sWrapperRect.width/2) + "px";
-        ss.$scrubberWrapper.style.top = center[1] - (sWrapperRect.height/2) + "px";
+        ss.$scrubberWrapper.style.left = center[0] - (sWrapperRect.width / 2) + "px";
+        ss.$scrubberWrapper.style.top = center[1] - (sWrapperRect.height / 2) + "px";
 
         //Grab the audio data
         let aData = s.audio.data;
